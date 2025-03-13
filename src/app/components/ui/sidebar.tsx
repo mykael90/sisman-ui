@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
+import { useSidebarContext } from './sidebarContext';
 
 interface SidebarItem {
   label: string;
@@ -29,48 +30,148 @@ const sidebarItems: SidebarItem[] = [
     )
   },
   {
-    label: 'Products',
+    label: 'Materiais',
     icon: (
       <svg
         xmlns='http://www.w3.org/2000/svg'
-        className='h-6 w-6'
         fill='none'
         viewBox='0 0 24 24'
+        strokeWidth={1.5}
         stroke='currentColor'
+        className='h-6 w-6'
       >
         <path
           strokeLinecap='round'
           strokeLinejoin='round'
-          strokeWidth={2}
-          d='M16 11V7a4 4 0 00-8 0v4m8 0v4a4 4 0 11-8 0v-4m8 0H8m-8 0v4a4 4 0 004 4h8a4 4 0 004-4v-4m-8 0z'
+          d='M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0v1.5m-2.25-1.5v1.5m16.5 10.5v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5A3.375 3.375 0 0010.5 1.5H8.25m2.25 16.5V18.75m-2.25 1.5v-1.5m16.5-10.5v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125V7.5'
         />
       </svg>
     ),
     children: [
-      { label: 'All Products' },
-      { label: 'Add Product' },
-      { label: 'Categories' }
+      { label: 'Todos os Materiais' },
+      { label: 'Adicionar Material' },
+      { label: 'Categorias' }
     ]
   },
   {
-    label: 'Customers',
+    label: 'Colaboradores',
     icon: (
       <svg
         xmlns='http://www.w3.org/2000/svg'
-        className='h-6 w-6'
         fill='none'
         viewBox='0 0 24 24'
+        strokeWidth={1.5}
         stroke='currentColor'
+        className='h-6 w-6'
       >
         <path
           strokeLinecap='round'
           strokeLinejoin='round'
-          strokeWidth={2}
-          d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
+          d='M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-3.055m0-3.285a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zM3 16.628a18.138 18.138 0 013.375-9.734 4.5 4.5 0 012.25-.911m-2.25 9.734h13.5m-13.5 0h3m3 0h3m3 0h3'
         />
       </svg>
     ),
-    children: [{ label: 'All Customers' }, { label: 'New Customer' }]
+    children: [
+      { label: 'Todos os Colaboradores' },
+      { label: 'Adicionar Colaborador' },
+      { label: 'Cargos' }
+    ]
+  },
+  {
+    label: 'Equipamentos',
+    icon: (
+      <svg
+        xmlns='http://www.w3.org/2000/svg'
+        fill='none'
+        viewBox='0 0 24 24'
+        strokeWidth={1.5}
+        stroke='currentColor'
+        className='h-6 w-6'
+      >
+        <path
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          d='M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0v.75A2.25 2.25 0 0118.75 8h-1.5m-4.5 0h-6m4.5 0H5.25A2.25 2.25 0 003 8m18 0v-.75A2.25 2.25 0 0018.75 5h-1.5m-4.5 0h-6m4.5 0H3v.75A2.25 2.25 0 005.25 8h1.5m16.5 10.5h-1.5'
+        />
+      </svg>
+    ),
+    children: [
+      { label: 'Todos os Equipamentos' },
+      { label: 'Adicionar Equipamento' },
+      { label: 'Tipos' }
+    ]
+  },
+  {
+    label: 'Infraestrutura',
+    icon: (
+      <svg
+        xmlns='http://www.w3.org/2000/svg'
+        fill='none'
+        viewBox='0 0 24 24'
+        strokeWidth={1.5}
+        stroke='currentColor'
+        className='h-6 w-6'
+      >
+        <path
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          d='M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25'
+        />
+      </svg>
+    ),
+    children: [
+      { label: 'Todas as Infraestruturas' },
+      { label: 'Adicionar Infraestrutura' },
+      { label: 'Tipos' }
+    ]
+  },
+  {
+    label: 'Fornecedores',
+    icon: (
+      <svg
+        xmlns='http://www.w3.org/2000/svg'
+        fill='none'
+        viewBox='0 0 24 24'
+        strokeWidth={1.5}
+        stroke='currentColor'
+        className='h-6 w-6'
+      >
+        <path
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          d='M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.013.16-.02.32-.02.482m19.5 0c0 1.232.046 2.453.138 3.662a4.007 4.007 0 01-3.7 3.7 48.678 48.678 0 01-7.324 0 4.007 4.007 0 01-3.7-3.7c-.013-.16-.02-.32-.02-.482m19.5 0a48.427 48.427 0 00-1.814-6.326 4.006 4.006 0 00-3.7-3.7c-.543 0-1.16.042-1.8.124m-11.42 0c-.639-.082-1.256-.124-1.8-.124a4.006 4.006 0 00-3.7 3.7c-1.14 4.02-1.14 8.571 0 12.591m16.826 0a48.678 48.678 0 01-7.324 0 4.007 4.007 0 01-3.7-3.7c-.013-.16-.02-.32-.02-.482'
+        />
+      </svg>
+    ),
+    children: [
+      { label: 'Todos os Fornecedores' },
+      { label: 'Adicionar Fornecedor' },
+      { label: 'Categorias' }
+    ]
+  },
+  {
+    label: 'Frota',
+    icon: (
+      <svg
+        xmlns='http://www.w3.org/2000/svg'
+        fill='none'
+        viewBox='0 0 24 24'
+        strokeWidth={1.5}
+        stroke='currentColor'
+        className='h-6 w-6'
+      >
+        <path
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          d='M18 12.75h-1.5m-6 0H4.5m6 0v-6m2.25 6v.9m-4.5-.9h4.5m-4.5 0a4.5 4.5 0 01-9 0v-3m16.5 3a4.5 4.5 0 01-9 0v-6m9 0H4.5'
+        />
+      </svg>
+    ),
+    children: [
+      { label: 'Todos os Veículos' },
+      { label: 'Adicionar Veículo' },
+      { label: 'Tipos' }
+    ]
   },
   {
     label: 'Settings',
@@ -100,21 +201,17 @@ const sidebarItems: SidebarItem[] = [
 ];
 
 const Sidebar: React.FC = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const { isCollapsed, toggleCollapse } = useSidebarContext(); // Use the context
   const sidebarRef = useRef<HTMLElement>(null);
-
-  const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
-  };
 
   return (
     <aside
       ref={sidebarRef}
-      className={`top-10 left-0 z-20 flex min-h-screen flex-col bg-gray-50 p-4 text-gray-700 transition-all duration-300 dark:bg-gray-800 dark:text-gray-300 ${
-        isCollapsed ? 'w-16' : 'w-64'
+      className={`top-10 left-0 z-20 flex min-h-screen flex-col bg-gray-50 py-4 text-gray-700 transition-all duration-300 dark:bg-gray-800 dark:text-gray-300 ${
+        isCollapsed ? 'w-0 sm:w-16' : 'w-full sm:w-64'
       }`}
     >
-      <div className='mt-8 mb-4 flex items-center justify-between'>
+      {/* <div className='mt-8 mb-4 flex items-center justify-between'>
         <h2
           className={`text-2xl font-bold transition-opacity duration-300 ${
             isCollapsed ? 'hidden' : 'opacity-100'
@@ -143,8 +240,8 @@ const Sidebar: React.FC = () => {
             />
           </svg>
         </button>
-      </div>
-      <nav className='flex-1'>
+      </div> */}
+      <nav className='mt-9 flex-1'>
         <ul className='space-y-2'>
           {sidebarItems.map(item => (
             <li key={item.label}>
@@ -152,14 +249,16 @@ const Sidebar: React.FC = () => {
                 <details className='group'>
                   <summary
                     className={`flex w-full cursor-pointer list-none items-center rounded-md px-4 py-2 hover:bg-gray-200 focus:outline-none dark:hover:bg-gray-700 ${
-                      isCollapsed ? 'justify-center' : 'justify-start'
+                      isCollapsed
+                        ? 'hidden justify-center sm:block'
+                        : 'justify-start'
                     }`}
                     onClick={isCollapsed ? toggleCollapse : undefined}
                   >
                     {item.icon && <span>{item.icon}</span>}
                     <span
-                      className={`transition-opacity duration-300 ${
-                        isCollapsed ? 'hidden' : 'opacity-100'
+                      className={`ps-1 transition-opacity duration-300 ${
+                        isCollapsed ? 'hidden' : 'sm:opacity-100'
                       }`}
                     >
                       {item.label}
@@ -189,7 +288,7 @@ const Sidebar: React.FC = () => {
                       <li key={child.label}>
                         <a
                           href='#'
-                          className='block rounded-md px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700'
+                          className='block rounded-md px-4 py-2 ps-1 hover:bg-gray-200 dark:hover:bg-gray-700'
                         >
                           {child.label}
                         </a>
@@ -201,12 +300,14 @@ const Sidebar: React.FC = () => {
                 <a
                   href='#'
                   className={`flex items-center rounded-md px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${
-                    isCollapsed ? 'justify-center' : 'justify-start'
+                    isCollapsed
+                      ? 'hidden justify-center sm:block'
+                      : 'justify-start'
                   }`}
                 >
                   {item.icon && <span>{item.icon}</span>}
                   <span
-                    className={`transition-opacity duration-300 ${
+                    className={`ps-1 transition-opacity duration-300 ${
                       isCollapsed ? 'hidden' : 'opacity-100'
                     }`}
                   >

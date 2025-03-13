@@ -4,6 +4,8 @@ import './globals.css';
 import Navbar from './components/ui/navbar';
 import Sidebar from './components/ui/sidebar';
 import Footer from './components/ui/footer';
+import { SidebarProvider } from './components/ui/sidebarContext';
+import Main from './components/ui/main';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -30,20 +32,22 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        <div className='flex min-h-screen flex-col'>
-          {' '}
-          {/* Main container */}
-          <div className='flex-grow'>
+        <SidebarProvider>
+          <Navbar />
+          <div className='flex min-h-screen flex-col'>
             {' '}
-            {/* This div takes up available space */}
-            <div className='flex'>
-              <Sidebar />
-              <main className='flex-1 p-4'>{children}</main>
+            {/* Main container */}
+            <div className='flex-grow'>
+              {' '}
+              {/* This div takes up available space */}
+              <div className='flex'>
+                <Sidebar />
+                <Main>{children}</Main>
+              </div>
             </div>
+            <Footer /> {/* Footer will stick to the bottom */}
           </div>
-          <Footer /> {/* Footer will stick to the bottom */}
-        </div>
+        </SidebarProvider>
       </body>
     </html>
   );
