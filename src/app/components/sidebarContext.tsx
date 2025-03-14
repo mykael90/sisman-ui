@@ -14,18 +14,18 @@ export const SidebarProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState();
 
-  useEffect(() => {
-    const handleResize = () => {
-      const isSmallScreen = window.innerWidth < 40 * 16; // 40rem = 40 * 16px (assuming 1rem = 16px)
-      setIsCollapsed(isSmallScreen); // Update state based on screen size, collapse if smallscreen
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     const isSmallScreen = window.innerWidth < 40 * 16; // 40rem = 40 * 16px (assuming 1rem = 16px)
+  //     setIsCollapsed(isSmallScreen); // Update state based on screen size, collapse if smallscreen
+  //   };
 
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Call once on mount to set initial state
-    return () => window.removeEventListener('resize', handleResize); // Cleanup on unmount
-  }, []);
+  //   window.addEventListener('resize', handleResize);
+  //   handleResize(); // Call once on mount to set initial state
+  //   return () => window.removeEventListener('resize', handleResize); // Cleanup on unmount
+  // }, []);
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);

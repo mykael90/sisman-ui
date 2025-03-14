@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import Navbar from './components/ui/navbar';
-import Sidebar from './components/ui/sidebar';
-import Footer from './components/ui/footer';
-import { SidebarProvider } from './components/ui/sidebarContext';
-import Main from './components/ui/main';
+import Navbar from './components/layout/navbar';
+import Sidebar from './components/layout/sidebar';
+import Footer from './components/layout/footer';
+import { SidebarProvider } from './components/sidebarContext';
+import Main from './components/layout/main';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -33,6 +33,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SidebarProvider>
+          <div className='bg-bermuda h-2'></div>
           <Navbar />
           <div className='flex min-h-screen flex-col'>
             {' '}

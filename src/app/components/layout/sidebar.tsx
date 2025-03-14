@@ -1,10 +1,13 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { useSidebarContext } from './sidebarContext';
+import { useSidebarContext } from '../sidebarContext';
+import NavLink from '../ui/NavLink';
+import Summary from '../ui/Summary';
 
 interface SidebarItem {
   label: string;
+  href?: string; // Make href optional for non-link items
   icon?: React.ReactNode;
   children?: SidebarItem[];
 }
@@ -12,6 +15,7 @@ interface SidebarItem {
 const sidebarItems: SidebarItem[] = [
   {
     label: 'Dashboard',
+    href: '/dashboard',
     icon: (
       <svg
         xmlns='http://www.w3.org/2000/svg'
@@ -31,6 +35,7 @@ const sidebarItems: SidebarItem[] = [
   },
   {
     label: 'Materiais',
+    href: '/material', //Optional, could be omitted if you don't want a direct link to Materiais
     icon: (
       <svg
         xmlns='http://www.w3.org/2000/svg'
@@ -48,9 +53,9 @@ const sidebarItems: SidebarItem[] = [
       </svg>
     ),
     children: [
-      { label: 'Todos os Materiais' },
-      { label: 'Adicionar Material' },
-      { label: 'Categorias' }
+      { label: 'Todos os Materiais', href: '/material/all' },
+      { label: 'Adicionar Material', href: '/material/add' },
+      { label: 'Categorias', href: '/material/category' }
     ]
   },
   {
@@ -175,6 +180,7 @@ const sidebarItems: SidebarItem[] = [
   },
   {
     label: 'Settings',
+    href: '/settings',
     icon: (
       <svg
         xmlns='http://www.w3.org/2000/svg'
@@ -247,7 +253,8 @@ const Sidebar: React.FC = () => {
             <li key={item.label}>
               {item.children ? (
                 <details className='group'>
-                  <summary
+                  <Summary
+                    href={item.href}
                     className={`flex w-full cursor-pointer list-none items-center rounded-md px-4 py-2 hover:bg-gray-200 focus:outline-none dark:hover:bg-gray-700 ${
                       isCollapsed
                         ? 'hidden justify-center sm:block'
@@ -278,7 +285,7 @@ const Sidebar: React.FC = () => {
                         />
                       </svg>
                     )}
-                  </summary>
+                  </Summary>
                   <ul
                     className={`mt-2 ml-6 space-y-1 ${
                       isCollapsed ? 'hidden' : ''
@@ -286,34 +293,33 @@ const Sidebar: React.FC = () => {
                   >
                     {item.children.map(child => (
                       <li key={child.label}>
-                        <a
-                          href='#'
-                          className='block rounded-md px-4 py-2 ps-1 hover:bg-gray-200 dark:hover:bg-gray-700'
-                        >
-                          {child.label}
-                        </a>
+                        {child.href ? (
+                          <NavLink href={child.href}>{child.label}</NavLink>
+                        ) : (
+                          <span className='block px-4 py-2 ps-1'>
+                            {child.label}
+                          </span> //Handle non-link children
+                        )}
                       </li>
                     ))}
                   </ul>
                 </details>
-              ) : (
-                <a
-                  href='#'
-                  className={`flex items-center rounded-md px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${
-                    isCollapsed
-                      ? 'hidden justify-center sm:block'
-                      : 'justify-start'
-                  }`}
+              ) : item.href ? (
+                <NavLink
+                  href={item.href}
+                  className={`flex items-center rounded-md px-4 py-2 ${isCollapsed ? 'hidden justify-center sm:block' : 'justify-start'}`}
                 >
                   {item.icon && <span>{item.icon}</span>}
                   <span
-                    className={`ps-1 transition-opacity duration-300 ${
-                      isCollapsed ? 'hidden' : 'opacity-100'
-                    }`}
+                    className={`ps-1 transition-opacity duration-300 ${isCollapsed ? 'hidden' : 'opacity-100'}`}
                   >
                     {item.label}
                   </span>
-                </a>
+                </NavLink>
+              ) : (
+                <span className='flex items-center rounded-md px-4 py-2'>
+                  {item.label}
+                </span> //Handle top-level non-link items
               )}
             </li>
           ))}

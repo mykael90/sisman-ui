@@ -3,7 +3,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'; // Import for getting current route
 import { useState } from 'react';
-import { useSidebarContext } from './sidebarContext';
+import { useSidebarContext } from '../sidebarContext';
+import Image from 'next/image';
+import logo from '../../../../public/assets/img/logo.svg';
 
 const Navbar: React.FC = () => {
   const pathname = usePathname(); // Use usePathname instead of useRouter
@@ -19,8 +21,8 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className='fixed top-0 left-0 z-30 w-full bg-gray-50 py-1 shadow-md dark:bg-gray-800 dark:text-gray-300'>
-      <div className='flex content-center justify-between ps-4'>
+    <nav className='fixed top-2 left-0 z-30 w-full bg-gray-50 py-1 shadow-md dark:bg-gray-800 dark:text-gray-300'>
+      <div className='flex content-center justify-between ps-3'>
         <div className='flex content-center'>
           <button
             onClick={toggleCollapse}
@@ -43,11 +45,14 @@ const Navbar: React.FC = () => {
             </svg>
           </button>
           {/* Logo */}
-          <Link
-            href='/'
-            className='py-1 ps-4 text-xl font-bold text-gray-800 dark:text-gray-100'
-          >
-            SisMan
+          <Link href='/' className='py-1 ps-4'>
+            <Image
+              src={logo}
+              alt='SisMan Logo'
+              // width={80} // Adjust width as needed
+              height={26} // Adjust height as needed
+              className='dark:invert'
+            />
           </Link>
         </div>
 
