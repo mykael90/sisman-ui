@@ -22,7 +22,7 @@ const Summary: React.FC<SummaryProps> = ({
     <summary
       onClick={onClick}
       className={`${className} ${
-        isActive ? 'bg-sky-100 font-semibold dark:bg-sky-800' : ''
+        isActive ? 'bg-sisman-green/30 font-semibold dark:bg-sky-800' : ''
       }`}
     >
       {children}

@@ -14,8 +14,8 @@ interface SidebarItem {
 
 const sidebarItems: SidebarItem[] = [
   {
-    label: 'Dashboard',
-    href: '/dashboard',
+    label: 'Início',
+    href: '/inicio',
     icon: (
       <svg
         xmlns='http://www.w3.org/2000/svg'
@@ -255,7 +255,7 @@ const Sidebar: React.FC = () => {
                 <details className='group'>
                   <Summary
                     href={item.href}
-                    className={`flex w-full cursor-pointer list-none items-center rounded-md px-4 py-2 hover:bg-gray-200 focus:outline-none dark:hover:bg-gray-700 ${
+                    className={`hover:bg-sisman-green/10 dark:hover:bg-sisman-blue flex w-full cursor-pointer list-none items-center rounded-md px-4 py-2 focus:outline-none ${
                       isCollapsed
                         ? 'hidden justify-center sm:block'
                         : 'justify-start'

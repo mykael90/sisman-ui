@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import Navbar from './components/layout/navbar';
-import Sidebar from './components/layout/sidebar';
-import Footer from './components/layout/footer';
-import { SidebarProvider } from './components/sidebarContext';
-import Main from './components/layout/main';
+import Navbar from '@/components/layout/navbar';
+import Sidebar from '@/components/layout/sidebar';
+import Footer from '@/components/layout/footer';
+import { SidebarProvider } from '@/components/sidebarContext';
+import Main from '@/components/layout/main';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -32,22 +32,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div className='bg-sisman-blue t-0 fixed z-50 h-2 w-full'></div>
         <SidebarProvider>
-          <div className='bg-bermuda h-2'></div>
           <Navbar />
-          <div className='flex min-h-screen flex-col'>
-            {' '}
-            {/* Main container */}
-            <div className='flex-grow'>
-              {' '}
-              {/* This div takes up available space */}
-              <div className='flex'>
-                <Sidebar />
-                <Main>{children}</Main>
-              </div>
+          <div className='flex h-[calc(100vh-3.5rem)] flex-col'>
+            <div className='flex'>
+              <Sidebar />
+              <Main>{children}</Main>
             </div>
-            <Footer /> {/* Footer will stick to the bottom */}
           </div>
+          <Footer /> {/* Footer will stick to the bottom */}
         </SidebarProvider>
       </body>
     </html>

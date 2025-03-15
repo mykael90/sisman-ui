@@ -3,9 +3,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'; // Import for getting current route
 import { useState } from 'react';
-import { useSidebarContext } from '../sidebarContext';
+import { useSidebarContext } from '@/components/sidebarContext';
 import Image from 'next/image';
-import logo from '../../../../public/assets/img/logo.svg';
+import logo from '@/assets/img/logo.svg';
 
 const Navbar: React.FC = () => {
   const pathname = usePathname(); // Use usePathname instead of useRouter
@@ -51,7 +51,7 @@ const Navbar: React.FC = () => {
               alt='SisMan Logo'
               // width={80} // Adjust width as needed
               height={26} // Adjust height as needed
-              className='dark:invert'
+              className='filter dark:brightness-50 dark:grayscale-100 dark:invert-80'
             />
           </Link>
         </div>
