@@ -6,17 +6,24 @@ interface NavLinkProps {
   href: string;
   children: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 }
 
-const NavLink: React.FC<NavLinkProps> = ({ href, children, className }) => {
+const NavLink: React.FC<NavLinkProps> = ({
+  href,
+  children,
+  className,
+  onClick
+}) => {
   const pathname = usePathname();
   const isActive = pathname === href;
 
   return (
     <Link
       href={href}
-      className={`hover:bg-sisman-green/10 dark:hover:bg-sisman-blue block rounded-md px-4 py-2 ${
-        isActive ? 'bg-sisman-green/50 font-semibold dark:bg-sky-700' : ''
+      onClick={onClick}
+      className={`hover:bg-sisman-green/10 dark:hover:bg-sisman-green/20 block rounded-md px-4 py-2 ${
+        isActive ? 'bg-sisman-green/20 font-semibold' : ''
       } ${className}`}
     >
       {children}

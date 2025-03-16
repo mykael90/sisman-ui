@@ -32,16 +32,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className='bg-sisman-blue t-0 fixed z-50 h-2 w-full'></div>
         <SidebarProvider>
+          <div className='bg-sisman-blue dark:bg-sisman-gray t-0 fixed z-50 h-2 w-full'></div>
           <Navbar />
           <div className='flex h-[calc(100vh-3.5rem)] flex-col'>
             <div className='flex'>
               <Sidebar />
               <Main>{children}</Main>
             </div>
+            <Footer /> {/* Footer will stick to the bottom */}
           </div>
-          <Footer /> {/* Footer will stick to the bottom */}
         </SidebarProvider>
       </body>
     </html>

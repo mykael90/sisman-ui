@@ -1,38 +1,60 @@
 'use client';
 
-import { createContext, useContext, useState } from 'react';
+// sidebarContext.tsx (or similar)
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-interface SidebarContextType {
+interface SidebarContextProps {
   isCollapsed: boolean;
   toggleCollapse: () => void;
+  isMobile: boolean;
 }
 
-export const SidebarContext = createContext<SidebarContextType | null>(null);
+const SidebarContext = createContext<SidebarContextProps | undefined>(
+  undefined
+);
 
-export const SidebarProvider = ({
-  children
-}: {
+interface SidebarProviderProps {
   children: React.ReactNode;
+}
+
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    const listener = () => setMatches(media.matches);
+    window.addEventListener('resize', listener);
+    return () => window.removeEventListener('resize', listener);
+  }, [matches, query]);
+
+  return matches;
+}
+
+export const SidebarProvider: React.FC<SidebarProviderProps> = ({
+  children
 }) => {
-  const [isCollapsed, setIsCollapsed] = useState();
-
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     const isSmallScreen = window.innerWidth < 40 * 16; // 40rem = 40 * 16px (assuming 1rem = 16px)
-  //     setIsCollapsed(isSmallScreen); // Update state based on screen size, collapse if smallscreen
-  //   };
-
-  //   window.addEventListener('resize', handleResize);
-  //   handleResize(); // Call once on mount to set initial state
-  //   return () => window.removeEventListener('resize', handleResize); // Cleanup on unmount
-  // }, []);
+  const isMobile = useMediaQuery('(max-width: 640px)');
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(isMobile); // Initial state based on isMobile
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
 
+  useEffect(() => {
+    setIsCollapsed(isMobile);
+  }, [isMobile]);
+
+  const contextValue: SidebarContextProps = {
+    isCollapsed,
+    toggleCollapse,
+    isMobile
+  };
+
   return (
-    <SidebarContext.Provider value={{ isCollapsed, toggleCollapse }}>
+    <SidebarContext.Provider value={contextValue}>
       {children}
     </SidebarContext.Provider>
   );
@@ -40,7 +62,7 @@ export const SidebarProvider = ({
 
 export const useSidebarContext = () => {
   const context = useContext(SidebarContext);
-  if (context === null) {
+  if (!context) {
     throw new Error('useSidebarContext must be used within a SidebarProvider');
   }
   return context;
