@@ -8,7 +8,6 @@ import {
   Building2,
   Truck,
   UserRound,
-  Settings,
   ArrowRight
 } from 'lucide-react'; // Import icons from Lucide
 

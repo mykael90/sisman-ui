@@ -28,14 +28,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SidebarProvider>
-          <div className='bg-sisman-blue dark:bg-sisman-gray t-0 fixed z-50 h-2 w-full'></div>
+          <div className='bg-sisman-blue dark:bg-sisman-green t-0 fixed z-50 h-2 w-full'></div>
           <Navbar />
-          <div className='flex h-[calc(100vh-3.5rem)] flex-col'>
+          <div className='h-min-[calc(100vh-3.5rem)] flex flex-col'>
             <div className='flex'>
               <Sidebar />
               <Main>{children}</Main>

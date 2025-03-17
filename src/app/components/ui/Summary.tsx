@@ -21,7 +21,7 @@ const Summary: React.FC<SummaryProps> = ({
   return (
     <summary
       onClick={onClick}
-      className={`${className} ${
+      className={`hover:bg-sisman-green/80 hover:text-sisman-gray dark:hover:bg-sisman-green/80 ${className} ${
         isActive ? 'bg-sisman-green/30 font-semibold' : ''
       }`}
     >

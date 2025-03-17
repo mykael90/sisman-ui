@@ -22,7 +22,7 @@ const NavLink: React.FC<NavLinkProps> = ({
     <Link
       href={href}
       onClick={onClick}
-      className={`hover:bg-sisman-green/10 dark:hover:bg-sisman-green/20 block rounded-md px-4 py-2 ${
+      className={`hover:bg-sisman-green hover:text-sisman-gray dark:hover:bg-sisman-green block rounded-md px-4 py-2 ${
         isActive ? 'bg-sisman-green/20 font-semibold' : ''
       } ${className}`}
     >

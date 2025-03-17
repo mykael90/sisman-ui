@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-sisman-green: #68b205;
   --color-sisman-blue: #001a4c;
@@ -18,4 +20,9 @@ body {
   body {
     background-image: none !important;
   }
+}
+
+/* This is the key change - now using the custom dark variant */
+.dark body {
+  background-image: none !important;
 }

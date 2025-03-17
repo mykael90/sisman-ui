@@ -6,6 +6,10 @@ import { useState } from 'react';
 import { useSidebarContext } from '@/components/sidebarContext';
 import Image from 'next/image';
 import logo from '@/assets/img/logo.svg';
+import logo_dark from '@/assets/img/dark-logo.svg';
+import { Menu } from 'lucide-react';
+import ThemeToggle from '../ThemeToogle';
+import ButtonNavBar from '../ui/ButtonNavBar';
 
 const Navbar: React.FC = () => {
   const pathname = usePathname(); // Use usePathname instead of useRouter
@@ -22,38 +26,31 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className='fixed top-2 left-0 z-30 w-full bg-gray-50 py-1 shadow-md dark:bg-gray-800 dark:text-gray-300'>
-      <div className='flex content-center justify-between ps-3'>
+      <div className='flex content-center justify-between ps-2'>
         <div className='flex content-center'>
-          <button
-            onClick={toggleCollapse}
-            className='rounded-full hover:bg-gray-200 focus:outline-none dark:hover:bg-gray-700'
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className={`h-9 w-9 rounded-xs p-1 transition-transform duration-300`}
-              fill='none'
-              viewBox='0 0 24 24'
-              stroke='currentColor'
-            >
-              {/* Hamburger Icon */}
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M4 6h16M4 12h16m-7 6h7'
-              />
-            </svg>
-          </button>
+          <ButtonNavBar onClick={toggleCollapse} title='Menu'>
+            <Menu className='h-6 w-6' />
+          </ButtonNavBar>
           {/* Logo */}
-          <Link href='/' className='py-1 ps-4'>
+          <Link href='/' className='py-1 ps-2'>
             <Image
               src={logo}
               alt='SisMan Logo'
               // width={80} // Adjust width as needed
               height={26} // Adjust height as needed
-              className='filter dark:brightness-50 dark:grayscale-100 dark:invert-80'
+              className='dark:hidden'
+            />
+            <Image
+              src={logo_dark}
+              alt='SisMan Logo'
+              // width={80} // Adjust width as needed
+              height={26} // Adjust height as needed
+              className='hidden dark:block'
             />
           </Link>
+          <div className='ps-2'>
+            <ThemeToggle></ThemeToggle>
+          </div>
         </div>
 
         {/* Current Route */}
@@ -61,6 +58,11 @@ const Navbar: React.FC = () => {
           <span className='text-gray-600 dark:text-gray-400'>
             Current Route: {pathname}
           </span>
+        </div>
+
+        {/* Botões de redes sociais */}
+        <div className='items-center sm:flex'>
+          <div></div>
         </div>
 
         {/* User Status (Simulated) */}
