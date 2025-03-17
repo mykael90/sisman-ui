@@ -29,7 +29,7 @@ export default function About() {
   }, []);
 
   return (
-    <main className='flex flex-col bg-gray-100 p-8 dark:bg-gray-800'>
+    <main className='flex flex-col p-8'>
       <h1 className='mb-8 text-4xl font-bold text-gray-800 dark:text-gray-200'>
         Sobre o Projeto
       </h1>
