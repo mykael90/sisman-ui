@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useSidebarContext } from '@/src/app/components/sidebarProvider';
 import NavLink from '@/components/ui/NavLink';
 import Summary from '@/components/ui/Summary';
@@ -220,6 +220,16 @@ const Sidebar: React.FC = () => {
       toggleCollapse();
     }
   };
+
+  // Close all open details when isCollapsed changes to true
+  useEffect(() => {
+    if (isCollapsed) {
+      const details = sidebarRef.current?.querySelectorAll('details');
+      details?.forEach(detail => {
+        detail.removeAttribute('open');
+      });
+    }
+  }, [isCollapsed]);
 
   return (
     <aside

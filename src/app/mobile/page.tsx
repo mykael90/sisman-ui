@@ -1,4 +1,4 @@
-import { isMobile } from '../../lib/isMobile';
+import isMobile from '@/lib/isMobile';
 
 export default async function Mobile() {
   return (
