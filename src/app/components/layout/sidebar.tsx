@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
-import { useSidebarContext } from '@/components/sidebarContext';
+import React, { useRef } from 'react';
+import { useSidebarContext } from '@/src/app/components/sidebarProvider';
 import NavLink from '@/components/ui/NavLink';
 import Summary from '@/components/ui/Summary';
 import {
@@ -213,7 +213,6 @@ const SidebarItemComponent: React.FC<SidebarProps> = ({
 const Sidebar: React.FC = () => {
   const { isCollapsed, toggleCollapse, isMobile } = useSidebarContext(); // Use the context
   const sidebarRef = useRef<HTMLElement>(null);
-  // const isMobile = useMediaQuery('(max-width: 640px)'); // Define a media query for mobile (sm breakpoint)
 
   // Function to collapse the sidebar
   const collapseSidebar = () => {

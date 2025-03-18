@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'; // Import for getting current route
 import { useState } from 'react';
-import { useSidebarContext } from '@/components/sidebarContext';
+import { useSidebarContext } from '@/src/app/components/sidebarProvider';
 import Image from 'next/image';
 import logo from '@/assets/img/logo.svg';
 import logo_dark from '@/assets/img/dark-logo.svg';
