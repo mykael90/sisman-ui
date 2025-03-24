@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useSidebarContext } from '../sidebarProvider';
+import { useSidebarContext } from '../context/SidebarProvider';
 
 export default function Main({ children }: { children: React.ReactNode }) {
   const { isCollapsed } = useSidebarContext();

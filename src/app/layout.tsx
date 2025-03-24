@@ -4,8 +4,8 @@ import './globals.css';
 import Navbar from '@/components/layout/navbar';
 import Sidebar from '@/src/app/components/layout/sidebar/sidebar';
 import Footer from '@/components/layout/footer';
-import { SidebarProvider } from '@/src/app/components/sidebarProvider';
 import Main from '@/components/layout/main';
+import Providers from './providers';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -32,7 +32,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SidebarProvider>
+        <Providers>
           <div className='bg-sisman-blue dark:bg-sisman-green t-0 fixed z-50 h-2 w-full'></div>
           <Navbar />
           <div className='h-min-[calc(100vh-3.5rem)] flex flex-col'>
@@ -42,7 +42,7 @@ export default function RootLayout({
             </div>
             <Footer /> {/* Footer will stick to the bottom */}
           </div>
-        </SidebarProvider>
+        </Providers>
       </body>
     </html>
   );
