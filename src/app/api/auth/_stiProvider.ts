@@ -32,6 +32,7 @@ export default function STIOAuthProvider<P extends STIProfile>(
         grant_type: 'authorization_code'
       },
       async request(context) {
+        console.log(`context: ${JSON.stringify(context)}`);
         const { provider, params } = context;
         const response = await fetch(provider.token.url, {
           method: 'POST',
@@ -80,7 +81,7 @@ export default function STIOAuthProvider<P extends STIProfile>(
         email: decoded.email || ''
       };
     },
-    checks: ['pkce'], // Se necessário
+    checks: ['pkce', 'state'], // Se necessário
     options
   };
 }
