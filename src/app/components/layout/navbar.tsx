@@ -10,19 +10,11 @@ import logo_dark from '@/assets/img/dark-logo.svg';
 import { Menu } from 'lucide-react';
 import ThemeToggle from '../ThemeToogle';
 import ButtonNavBar from '../ui/ButtonNavBar';
+import SiginButton from '../ui/SignInButton';
 
 const Navbar: React.FC = () => {
   const pathname = usePathname(); // Use usePathname instead of useRouter
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Simulate login state
   const { isCollapsed, toggleCollapse } = useSidebarContext(); // Use the context
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-  };
 
   return (
     <nav className='fixed top-2 left-0 z-30 w-full bg-gray-50 py-1 shadow-md dark:bg-gray-800 dark:text-gray-300'>
@@ -67,26 +59,7 @@ const Navbar: React.FC = () => {
 
         {/* User Status (Simulated) */}
         <div className='flex items-center pe-4'>
-          {isLoggedIn ? (
-            <>
-              <span className='text-gray-600 dark:text-gray-400'>
-                Logged in as: User (Simulated)
-              </span>
-              <button
-                onClick={handleLogout}
-                className='ml-2 text-blue-500 hover:underline'
-              >
-                Sign out
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={handleLogin}
-              className='text-blue-500 hover:underline'
-            >
-              Sign in
-            </button>
-          )}
+          <SiginButton />
         </div>
       </div>
     </nav>
