@@ -26,12 +26,12 @@ export const authOptions: AuthOptions = {
     //   clientSecret: process.env.GOOGLE_CLIENT_SECRET
     // })
     GithubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string
     }),
     STIOAuthProvider({
-      clientId: process.env.STI_CLIENT_ID,
-      clientSecret: process.env.STI_CLIENT_SECRET,
+      clientId: process.env.STI_CLIENT_ID as string,
+      clientSecret: process.env.STI_CLIENT_SECRET as string,
       authorizationUrl: process.env.STI_AUTHORIZATION_URL,
       tokenUrl: process.env.STI_TOKEN_URL,
       redirectUri: process.env.STI_REDIRECT_URI
@@ -50,11 +50,11 @@ export const authOptions: AuthOptions = {
   },
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log(`user: ${JSON.stringify(user)}`);
-      console.log(`account: ${JSON.stringify(account)}`);
-      console.log(`profile: ${JSON.stringify(profile)}`);
-      console.log(`email: ${JSON.stringify(email)}`);
-      console.log(`credentials: ${JSON.stringify(credentials)}`);
+      console.log(`$1 user: ${JSON.stringify(user)}`);
+      console.log(`$2 account: ${JSON.stringify(account)}`);
+      console.log(`$3 profile: ${JSON.stringify(profile)}`);
+      console.log(`$4 email: ${JSON.stringify(email)}`);
+      console.log(`$5 credentials: ${JSON.stringify(credentials)}`);
       const isAllowedToSignIn = true;
       if (isAllowedToSignIn) {
         return true;
@@ -66,7 +66,7 @@ export const authOptions: AuthOptions = {
       }
     },
     async redirect({ url, baseUrl }) {
-      console.log(`url: ${url}, baseUrl: ${baseUrl}`);
+      console.log(`$6 url: ${url}, baseUrl: ${baseUrl}`);
       // Allows relative callback URLs
       if (url.startsWith('/')) return `${baseUrl}${url}`;
       // Allows callback URLs on the same origin
@@ -74,10 +74,10 @@ export const authOptions: AuthOptions = {
       return baseUrl;
     },
     async jwt({ token, user, account, profile }) {
-      console.log(`token: ${JSON.stringify(token)}`);
-      console.log(`user: ${JSON.stringify(user)}`);
-      console.log(`account: ${JSON.stringify(account)}`);
-      console.log(`profile: ${JSON.stringify(profile)}`);
+      console.log(`$7 token: ${JSON.stringify(token)}`);
+      console.log(`$8 user: ${JSON.stringify(user)}`);
+      console.log(`$9 account: ${JSON.stringify(account)}`);
+      console.log(`$10 profile: ${JSON.stringify(profile)}`);
       // Persist the OAth access_token or the user id on the token
       if (account) {
         token.accessToken = account.access_token;
@@ -85,10 +85,11 @@ export const authOptions: AuthOptions = {
       }
       return token;
     },
-    async session({ session, token, user }) {
-      console.log(`session: ${JSON.stringify(session)}`);
-      console.log(`token: ${JSON.stringify(token)}`);
-      console.log(`user: ${JSON.stringify(user)} `);
+    async session({ session, token, user, profile }) {
+      console.log(`$11 session: ${JSON.stringify(session)}`);
+      console.log(`$12 token: ${JSON.stringify(token)}`);
+      console.log(`$13 user: ${JSON.stringify(user)} `);
+      console.log(`$14 profile: ${JSON.stringify(profile)}`);
       // Send properties to the browser
       session.accessToken = token.accessToken;
       session.user.id = token.id;

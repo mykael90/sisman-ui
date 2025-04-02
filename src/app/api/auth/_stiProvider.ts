@@ -1,14 +1,21 @@
 import { OAuthUserConfig, OAuthConfig } from 'next-auth/providers/oauth';
-import { env } from 'process';
 
 export interface STIProfile {
   sub: string;
   name?: string;
   email?: string;
+  picture?: string;
+}
+
+// Define the optionsComplement interface
+interface optionsComplement {
+  authorizationUrl?: string;
+  tokenUrl?: string;
+  redirectUri?: string;
 }
 
 export default function STIOAuthProvider<P extends STIProfile>(
-  options: OAuthUserConfig<P>
+  options: OAuthUserConfig<P> & optionsComplement
 ): OAuthConfig<P> {
   return {
     id: 'sti',
@@ -35,7 +42,10 @@ export default function STIOAuthProvider<P extends STIProfile>(
       async request(context) {
         console.log(`context: ${JSON.stringify(context)}`);
         const { provider, params } = context;
-        const response = await fetch(provider.token.url, {
+        if (!provider.token) {
+          throw new Error('Provider token URL is missing.');
+        }
+        const response = await fetch(provider.token?.url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams({
@@ -43,7 +53,7 @@ export default function STIOAuthProvider<P extends STIProfile>(
             client_secret: provider.clientSecret as string,
             redirect_uri: provider.redirectUri as string,
             grant_type: 'authorization_code',
-            code: params.code
+            code: params.code as string
           })
         });
 
@@ -53,7 +63,13 @@ export default function STIOAuthProvider<P extends STIProfile>(
     },
     userinfo: {
       async request({ tokens }) {
-        console.log(`tokens STI: ${JSON.stringify(tokens)}`);
+        console.log(`$$1 tokens STI: ${JSON.stringify(tokens)}`);
+        if (!process.env.STI_USERINFO_URL) {
+          throw new Error('STI_USERINFO_URL environment variable is missing.');
+        }
+        if (!process.env.STI_XAPI_KEY) {
+          throw new Error('STI_XAPI_KEY environment variable is missing.');
+        }
 
         const userInfoResponse = await fetch(process.env.STI_USERINFO_URL, {
           headers: {
@@ -64,31 +80,46 @@ export default function STIOAuthProvider<P extends STIProfile>(
 
         const userInfo = await userInfoResponse.json();
 
-        console.log(`userInfo STI: ${JSON.stringify(userInfo)}`);
+        console.log(`$$2 userInfo STI: ${JSON.stringify(userInfo)}`);
 
         return {
           sub: userInfo['id-usuario'],
           name: userInfo['nome-pessoa'] || '',
-          email: userInfo.email || ''
+          email: userInfo.email || '',
+          picture: userInfo['url-foto'] || ''
         };
       }
     },
     profile(profile, tokens) {
-      console.log(`profile STI: ${JSON.stringify(profile)}`);
-      console.log(`tokens STI: ${JSON.stringify(tokens)}`);
-      let decoded = {};
+      console.log(`$$3 profile STI: ${JSON.stringify(profile)}`);
+      console.log(`$$4 tokens STI: ${JSON.stringify(tokens)}`);
+
+      type Decoded = {
+        sub: string;
+        name?: string;
+        email?: string;
+        picture?: string;
+      };
+
+      let decoded: Decoded = {
+        sub: '',
+        name: '',
+        email: '',
+        picture: ''
+      };
 
       if (tokens.id_token) {
         decoded = JSON.parse(
           Buffer.from(tokens.id_token.split('.')[1], 'base64').toString()
         );
       } else {
-        console.log(`ID Token não encontrado: ${tokens.id_token}`);
+        console.log(`$$5 ID Token não encontrado: ${tokens.id_token}`);
         // Use the sub from the userinfo response (profile)
         decoded = {
           sub: profile.sub,
-          name: profile.name || '',
-          email: profile.email || ''
+          name: profile.name,
+          email: profile.email,
+          picture: profile.picture
         };
       }
 
