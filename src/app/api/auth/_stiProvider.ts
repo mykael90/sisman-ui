@@ -4,7 +4,7 @@ export interface STIProfile {
   sub: string;
   name?: string;
   email?: string;
-  picture?: string;
+  image?: string;
 }
 
 // Define the optionsComplement interface
@@ -86,7 +86,7 @@ export default function STIOAuthProvider<P extends STIProfile>(
           sub: userInfo['id-usuario'],
           name: userInfo['nome-pessoa'] || '',
           email: userInfo.email || '',
-          picture: userInfo['url-foto'] || ''
+          image: userInfo['url-foto'] || ''
         };
       }
     },
@@ -98,14 +98,14 @@ export default function STIOAuthProvider<P extends STIProfile>(
         sub: string;
         name?: string;
         email?: string;
-        picture?: string;
+        image?: string;
       };
 
       let decoded: Decoded = {
         sub: '',
         name: '',
         email: '',
-        picture: ''
+        image: ''
       };
 
       if (tokens.id_token) {
@@ -119,14 +119,15 @@ export default function STIOAuthProvider<P extends STIProfile>(
           sub: profile.sub,
           name: profile.name,
           email: profile.email,
-          picture: profile.picture
+          image: profile.image
         };
       }
 
       return {
         id: decoded.sub,
         name: decoded.name || '',
-        email: decoded.email || ''
+        email: decoded.email || '',
+        image: decoded.image || ''
       };
     },
     checks: ['pkce', 'state'], // Se necessário

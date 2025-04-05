@@ -153,7 +153,7 @@ const Sidebar: React.FC = () => {
         isCollapsed ? 'w-0 sm:w-16' : 'w-full sm:w-64'
       }`}
     >
-      <nav className='mt-9 flex-1'>
+      <nav className='mt-10 flex-1'>
         <ul className='space-y-2'>
           {sidebarItems.map(item => (
             <li key={item.label}>

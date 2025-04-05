@@ -10,7 +10,7 @@ import logo_dark from '@/assets/img/dark-logo.svg';
 import { Menu } from 'lucide-react';
 import ThemeToggle from '../ThemeToogle';
 import ButtonNavBar from '../ui/ButtonNavBar';
-import SiginButton from '../ui/SignInButton';
+import SiginButton from '../ui/SignInButtonNew';
 
 const Navbar: React.FC = () => {
   const pathname = usePathname(); // Use usePathname instead of useRouter
@@ -21,22 +21,22 @@ const Navbar: React.FC = () => {
       <div className='flex content-center justify-between ps-2'>
         <div className='flex content-center'>
           <ButtonNavBar onClick={toggleCollapse} title='Menu'>
-            <Menu className='h-6 w-6' />
+            <Menu className='h-7 w-6' />
           </ButtonNavBar>
           {/* Logo */}
-          <Link href='/' className='py-1 ps-2'>
+          <Link href='/' className='flex items-center ps-2'>
             <Image
               src={logo}
               alt='SisMan Logo'
               // width={80} // Adjust width as needed
-              height={26} // Adjust height as needed
+              height={25} // Adjust height as needed
               className='dark:hidden'
             />
             <Image
               src={logo_dark}
               alt='SisMan Logo'
               // width={80} // Adjust width as needed
-              height={26} // Adjust height as needed
+              height={25} // Adjust height as needed
               className='hidden dark:block'
             />
           </Link>
