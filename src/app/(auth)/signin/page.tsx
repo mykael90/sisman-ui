@@ -1,6 +1,6 @@
 import { getProviders, signIn } from 'next-auth/react';
 import StiSiginButton from '../../components/ui/StiSigninButton';
-import { User, AlertTriangle } from 'lucide-react';
+import { User, AlertTriangle, ShieldCheck, ExternalLink } from 'lucide-react';
 
 const authErrorMessages = {
   Signin: 'Try signing in with a different account.',
@@ -23,6 +23,34 @@ const getAuthErrorMessage = (error: string | undefined) => {
   return authErrorMessages[error as keyof typeof authErrorMessages]
     ? authErrorMessages[error as keyof typeof authErrorMessages]
     : authErrorMessages.default;
+};
+
+const SecurityInfo: React.FC = () => {
+  return (
+    <div className='rounded-lg bg-gray-100 p-8 shadow-md dark:bg-gray-800'>
+      <div className='mb-6 flex items-center'>
+        <ShieldCheck className='mr-4 h-10 w-10 text-blue-500' />
+        <h2 className='text-2xl font-bold text-gray-800 dark:text-gray-200'>
+          Segurança e Autenticação
+        </h2>
+      </div>
+      <div className='mb-6'>
+        <p className='text-justify text-gray-700 dark:text-gray-300'>
+          O SISMAN leva a segurança a sério. Para garantir a proteção dos seus
+          dados, nós <span className='font-bold'>não armazenamos</span> suas
+          senhas em nossos servidores.
+        </p>
+      </div>
+      <div>
+        <p className='text-justify text-gray-700 dark:text-gray-300'>
+          A autenticação é realizada por meio de serviços externos confiáveis,
+          garantindo que suas credenciais permaneçam seguras com o provedor de
+          serviço escolhido.
+          <ExternalLink className='ml-1 inline-block h-4 w-4' />
+        </p>
+      </div>
+    </div>
+  );
 };
 
 export default async function SignIn({
@@ -50,6 +78,9 @@ export default async function SignIn({
           </div>
         )}
         <StiSiginButton callback={callbackUrl} />
+      </div>
+      <div className='mt-8 w-full max-w-md'>
+        <SecurityInfo />
       </div>
     </main>
   );
