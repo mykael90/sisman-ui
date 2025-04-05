@@ -38,7 +38,7 @@ export const authOptions: AuthOptions = {
     })
   ],
   pages: {
-    // signIn: '/signin'
+    signIn: '/signin'
     // signOut: '/signout'
     // error: '/error' // Error code passed in query string as ?error=
     // verifyRequest: '/verify-request' // (used for check email message)
@@ -96,6 +96,7 @@ export const authOptions: AuthOptions = {
       session.error = token.error;
       return session;
     }
-  }
+  },
+  secret: process.env.NEXTAUTH_SECRET
   // adapter: MongoDBAdapter(clientPromise)
 };
