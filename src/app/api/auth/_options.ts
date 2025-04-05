@@ -82,6 +82,7 @@ export const authOptions: AuthOptions = {
       if (account) {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
+        token.id = user.id;
       }
       return token;
     },
@@ -92,8 +93,10 @@ export const authOptions: AuthOptions = {
       console.log(`$14 profile: ${JSON.stringify(profile)}`);
       // Send properties to the browser
       session.accessToken = token.accessToken;
-      session.user.id = token.id;
+      session.user.id = token.sub || token.id;
       session.error = token.error;
+
+      console.log(`$15 session: ${JSON.stringify(session)}`);
       return session;
     }
   },
