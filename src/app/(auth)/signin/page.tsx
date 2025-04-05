@@ -27,7 +27,7 @@ const getAuthErrorMessage = (error: string | undefined) => {
 
 const SecurityInfo: React.FC = () => {
   return (
-    <div className='rounded-lg bg-gray-100 p-8 shadow-md dark:bg-gray-800'>
+    <div className='rounded-lg bg-gray-50 p-8 shadow-md dark:bg-gray-800'>
       <div className='mb-6 flex items-center'>
         <ShieldCheck className='mr-4 h-10 w-10 text-blue-500' />
         <h2 className='text-2xl font-bold text-gray-800 dark:text-gray-200'>
@@ -63,8 +63,8 @@ export default async function SignIn({
   const providers = await getProviders();
 
   return (
-    <main className='flex h-screen w-full flex-col items-center bg-gray-100 p-10 dark:bg-gray-800'>
-      <div className='w-full max-w-md rounded-2xl bg-white p-10 shadow-xl dark:bg-gray-700'>
+    <main className='flex h-screen w-full flex-col items-center p-10 dark:bg-gray-800'>
+      <div className='w-full max-w-md rounded-2xl bg-gray-50 p-10 shadow-xl dark:bg-gray-700'>
         <div className='mb-8 flex items-center justify-center'>
           <User className='mr-2 h-10 w-10 text-gray-800 dark:text-gray-200' />
           <h1 className='text-2xl font-bold text-gray-800 dark:text-gray-200'>
