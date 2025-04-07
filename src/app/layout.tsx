@@ -33,14 +33,16 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <div className='bg-sisman-blue dark:bg-sisman-green t-0 fixed z-50 h-2 w-full'></div>
-          <Navbar />
-          <div className='h-min-[calc(100vh-3.5rem)] flex flex-col'>
-            <div className='flex'>
-              <Sidebar />
-              <Main>{children}</Main>
+          <div className='flex min-h-screen flex-col'>
+            <div className='bg-sisman-blue dark:bg-sisman-green z-50 h-2 w-full'></div>
+            <Navbar />
+            <div className='flex flex-1 flex-col'>
+              <div className='flex h-full w-full flex-1 flex-row'>
+                <Sidebar />
+                <Main>{children}</Main>
+              </div>
+              <Footer /> {/* Footer will stick to the bottom */}
             </div>
-            <Footer /> {/* Footer will stick to the bottom */}
           </div>
         </Providers>
       </body>

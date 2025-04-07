@@ -57,7 +57,7 @@ export default function HomePage() {
   ];
 
   return (
-    <main className='flex h-[calc(100vh-7rem)] w-full flex-col p-8'>
+    <main className='flex w-full flex-1 flex-col items-center justify-center p-8'>
       <h1 className='mb-8 text-4xl font-bold text-gray-800 dark:text-gray-200'>
         Bem-vindo ao SisMan!
       </h1>

@@ -149,11 +149,11 @@ const Sidebar: React.FC = () => {
   return (
     <aside
       ref={sidebarRef}
-      className={`h-min-[calc(100vh-3.5rem)] top-10 left-0 z-20 mt-2 flex flex-col overflow-y-auto bg-gray-50 py-4 text-gray-700 transition-all duration-300 dark:bg-gray-800 dark:text-gray-300 ${
+      className={`overflow-x-hidden overflow-y-auto bg-gray-50 text-gray-700 transition-all duration-300 dark:bg-gray-800 dark:text-gray-300 ${
         isCollapsed ? 'w-0 sm:w-16' : 'w-full sm:w-64'
       }`}
     >
-      <nav className='mt-10 flex-1'>
+      <nav className='mt-1'>
         <ul className='space-y-2'>
           {sidebarItems.map(item => (
             <li key={item.label}>

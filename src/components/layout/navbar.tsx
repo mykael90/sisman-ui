@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
   const { isCollapsed, toggleCollapse } = useSidebarContext(); // Use the context
 
   return (
-    <nav className='fixed top-2 left-0 z-30 w-full bg-gray-50 py-1 shadow-md dark:bg-gray-800 dark:text-gray-300'>
+    <nav className='z-30 w-full bg-gray-50 py-1 shadow-md dark:bg-gray-800 dark:text-gray-300'>
       <div className='flex content-center justify-between ps-2'>
         <div className='flex content-center'>
           <ButtonNavBar onClick={toggleCollapse} title='Menu'>

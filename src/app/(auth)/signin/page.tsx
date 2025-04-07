@@ -1,5 +1,14 @@
 import { getProviders, signIn } from 'next-auth/react';
-import StiSiginButton from '../../../components/ui/StiSigninButton';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardSeparator
+} from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import ProvidersSigninButton from '../../../components/ui/ProvidersSigninButtons';
 import { User, AlertTriangle, ShieldCheck, ExternalLink } from 'lucide-react';
 
 const authErrorMessages = {
@@ -25,34 +34,6 @@ const getAuthErrorMessage = (error: string | undefined) => {
     : authErrorMessages.default;
 };
 
-const SecurityInfo: React.FC = () => {
-  return (
-    <div className='rounded-lg p-8 shadow-xl'>
-      <div className='mb-6 flex items-center'>
-        <ShieldCheck className='mr-4 h-10 w-10 text-blue-500' />
-        <h2 className='text-2xl font-bold text-gray-800 dark:text-gray-200'>
-          Segurança e Autenticação
-        </h2>
-      </div>
-      <div className='mb-6'>
-        <p className='text-justify text-gray-700 dark:text-gray-300'>
-          O SISMAN leva a segurança a sério. Para garantir a proteção dos seus
-          dados, nós <span className='font-bold'>não armazenamos</span> suas
-          senhas em nossos servidores.
-        </p>
-      </div>
-      <div>
-        <p className='text-justify text-gray-700 dark:text-gray-300'>
-          A autenticação é realizada por meio de serviços externos confiáveis,
-          garantindo que suas credenciais permaneçam seguras com o provedor de
-          serviço escolhido.
-          <ExternalLink className='ml-1 inline-block h-4 w-4' />
-        </p>
-      </div>
-    </div>
-  );
-};
-
 export default async function SignIn({
   searchParams
 }: {
@@ -63,34 +44,56 @@ export default async function SignIn({
   const providers = await getProviders();
 
   return (
-    <main className='flex h-screen w-full flex-col items-center p-10'>
-      <div className='w-full max-w-md rounded-2xl bg-gray-100 p-10 shadow-xl dark:border-zinc-100 dark:bg-gray-900'>
-        <div className='mb-8 flex items-center justify-center'>
-          <User className='mr-2 h-10 w-10 text-gray-800 dark:text-gray-200' />
-          <h1 className='text-2xl font-bold text-gray-800 dark:text-gray-200'>
-            Realizar login
-          </h1>
-        </div>
-        {authError && (
-          <div className='mb-10 flex items-center rounded-md bg-rose-500 px-4 py-3 text-white'>
-            <AlertTriangle className='mr-2 h-5 w-5' />
-            <p className='text-sm'>{authError}</p>
-          </div>
-        )}
-        {/* <StiSiginButton callback={callbackUrl} />
-         */}
-        <div className='flex justify-around pt-6'>
-          <button className='bg-sisman-blue hover:bg-sisman-green w-30 cursor-pointer rounded-full px-4 py-2 font-bold text-white'>
-            UFRN.BR
-          </button>
-          <button className='bg-sisman-blue hover:bg-sisman-green w-30 cursor-pointer rounded-full px-4 py-2 font-bold text-white'>
-            GOV.BR
-          </button>
-        </div>
-      </div>
-      <div className='mt-8 w-full max-w-md'>
-        <SecurityInfo />
-      </div>
+    <main className='flex w-full flex-col items-center p-10'>
+      <Card className='w-full max-w-md'>
+        <CardHeader className='flex items-center space-x-4'>
+          <ShieldCheck className='h-10 w-10 text-blue-500' />
+          <CardTitle>Segurança e Autenticação</CardTitle>
+        </CardHeader>
+        <CardSeparator />
+        <CardHeader className='flex flex-col items-center justify-center space-y-2 py-0'>
+          <User className='h-10 w-10 text-blue-500 dark:text-gray-200' />
+          <CardTitle>Entrar com</CardTitle>
+        </CardHeader>
+        <CardContent className='space-y-4'>
+          <ProvidersSigninButton callback={callbackUrl} />
+          {authError && (
+            <Alert variant='destructive'>
+              <AlertTriangle className='h-4 w-4' />
+              <AlertTitle>Erro</AlertTitle>
+              <AlertDescription>{authError}</AlertDescription>
+            </Alert>
+          )}
+        </CardContent>
+        <CardSeparator />
+        <CardContent className='space-y-4'>
+          <CardDescription className='text-justify'>
+            Como medida de proteção, adotamos um modelo de autenticação externa,
+            em que as credenciais dos usuários são validadas exclusivamente por
+            provedores de serviços terceiros confiáveis (como UFRN, GOV.BR,
+            etc.).
+            <a
+              href='https://www.gov.br/governodigital/pt-br/estrategias-e-governanca-digital/transformacao-digital/ferramentas/autenticacao-gov.br'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <ExternalLink className='ml-1 inline-block h-4 w-4' />
+              <span className='sr-only'>
+                Mais informações sobre autenticação GOV.BR (abre em uma nova
+                aba)
+              </span>
+            </a>
+          </CardDescription>
+          <CardDescription className='text-justify'>
+            Dessa forma, as senhas nunca são armazenadas em nossos servidores,
+            mitigando riscos associados a vazamentos ou acessos não autorizados.
+            A gestão de credenciais fica integralmente sob responsabilidade do
+            provedor escolhido pelo usuário, assegurando maior robustez no
+            processo de autenticação.
+            {/* <ExternalLink className='ml-1 inline-block h-4 w-4' /> */}
+          </CardDescription>
+        </CardContent>
+      </Card>
     </main>
   );
 }
