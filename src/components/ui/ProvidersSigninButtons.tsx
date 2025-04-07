@@ -3,11 +3,13 @@
 import { signIn } from 'next-auth/react';
 import { Button } from './button';
 
+const classNameButton = 'w-30 cursor-pointer rounded-full';
+
 const StiSiginButton = ({ callback: callbackUrl }: { callback: string }) => {
   return (
     <div className='flex justify-around'>
       <Button
-        className='w-30 rounded-full'
+        className={classNameButton}
         variant='default'
         size='default'
         onClick={() => signIn('sti', { callbackUrl })}
@@ -15,7 +17,7 @@ const StiSiginButton = ({ callback: callbackUrl }: { callback: string }) => {
         UFRN.BR
       </Button>
       <Button
-        className='w-30 rounded-full'
+        className={classNameButton}
         variant='default'
         size='default'
         onClick={() => signIn('sti', { callbackUrl })}

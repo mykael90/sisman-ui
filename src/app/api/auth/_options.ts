@@ -7,6 +7,7 @@ import STIOAuthProvider from './_stiProvider';
 // import clientPromise from '@/lib/mongo/client';
 import { AuthOptions } from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
+import { AdapterUser } from 'next-auth/adapters';
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -83,6 +84,9 @@ export const authOptions: AuthOptions = {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
         token.id = user.id;
+        if (user.login) {
+          token.login = user.login;
+        }
       }
       return token;
     },
@@ -95,6 +99,7 @@ export const authOptions: AuthOptions = {
       session.accessToken = token.accessToken;
       session.user.id = token.sub || token.id;
       session.error = token.error;
+      session.user.login = token.login;
 
       console.log(`$15 session: ${JSON.stringify(session)}`);
       return session;

@@ -10,7 +10,7 @@ import logo_dark from '@/assets/img/dark-logo.svg';
 import { Menu } from 'lucide-react';
 import ThemeToggle from '../../theme/theme-toogle';
 import ButtonNavBar from '../ui/ButtonNavBar';
-import SiginButton from '../ui/SignInButtonNew';
+import SiginButton from '../ui/SignInButton';
 
 const Navbar: React.FC = () => {
   const pathname = usePathname(); // Use usePathname instead of useRouter
