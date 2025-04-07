@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useRef, useEffect, useState } from 'react';
-import { useSidebarContext } from '@/src/app/components/context/SidebarProvider';
-import NavLink from '@/components/ui/NavLink';
-import Summary from '@/components/ui/Summary';
+import { useSidebarContext } from '@/src/components/context/sidebar-provider';
+import NavLink from '@/src/components/ui/NavLink';
+import Summary from '@/src/components/ui/Summary';
 import { DIVIDER_LABEL, SidebarItem, sidebarItems } from './sidebarItems';
 import { ChevronRight } from 'lucide-react';
 

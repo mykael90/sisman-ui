@@ -1,5 +1,5 @@
 import { getProviders, signIn } from 'next-auth/react';
-import StiSiginButton from '../../components/ui/StiSigninButton';
+import StiSiginButton from '../../../components/ui/StiSigninButton';
 import { User, AlertTriangle, ShieldCheck, ExternalLink } from 'lucide-react';
 
 const authErrorMessages = {
@@ -27,7 +27,7 @@ const getAuthErrorMessage = (error: string | undefined) => {
 
 const SecurityInfo: React.FC = () => {
   return (
-    <div className='rounded-lg bg-gray-50 p-8 shadow-md dark:bg-gray-800'>
+    <div className='rounded-lg p-8 shadow-xl'>
       <div className='mb-6 flex items-center'>
         <ShieldCheck className='mr-4 h-10 w-10 text-blue-500' />
         <h2 className='text-2xl font-bold text-gray-800 dark:text-gray-200'>
@@ -58,13 +58,13 @@ export default async function SignIn({
 }: {
   searchParams: { callbackUrl?: string; error?: string };
 }) {
-  const { callbackUrl = '/', error } = searchParams;
+  const { callbackUrl = '/', error } = await Promise.resolve(searchParams);
   const authError = getAuthErrorMessage(error);
   const providers = await getProviders();
 
   return (
-    <main className='flex h-screen w-full flex-col items-center p-10 dark:bg-gray-800'>
-      <div className='w-full max-w-md rounded-2xl bg-gray-50 p-10 shadow-xl dark:bg-gray-700'>
+    <main className='flex h-screen w-full flex-col items-center p-10'>
+      <div className='w-full max-w-md rounded-2xl bg-gray-100 p-10 shadow-xl dark:border-zinc-100 dark:bg-gray-900'>
         <div className='mb-8 flex items-center justify-center'>
           <User className='mr-2 h-10 w-10 text-gray-800 dark:text-gray-200' />
           <h1 className='text-2xl font-bold text-gray-800 dark:text-gray-200'>
@@ -77,7 +77,16 @@ export default async function SignIn({
             <p className='text-sm'>{authError}</p>
           </div>
         )}
-        <StiSiginButton callback={callbackUrl} />
+        {/* <StiSiginButton callback={callbackUrl} />
+         */}
+        <div className='flex justify-around pt-6'>
+          <button className='bg-sisman-blue hover:bg-sisman-green w-30 cursor-pointer rounded-full px-4 py-2 font-bold text-white'>
+            UFRN.BR
+          </button>
+          <button className='bg-sisman-blue hover:bg-sisman-green w-30 cursor-pointer rounded-full px-4 py-2 font-bold text-white'>
+            GOV.BR
+          </button>
+        </div>
       </div>
       <div className='mt-8 w-full max-w-md'>
         <SecurityInfo />

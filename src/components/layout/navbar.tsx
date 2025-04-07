@@ -3,12 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'; // Import for getting current route
 import { useState } from 'react';
-import { useSidebarContext } from '@/src/app/components/context/SidebarProvider';
+import { useSidebarContext } from '@/src/components/context/sidebar-provider';
 import Image from 'next/image';
 import logo from '@/assets/img/logo.svg';
 import logo_dark from '@/assets/img/dark-logo.svg';
 import { Menu } from 'lucide-react';
-import ThemeToggle from '../ThemeToogle';
+import ThemeToggle from '../../theme/theme-toogle';
 import ButtonNavBar from '../ui/ButtonNavBar';
 import SiginButton from '../ui/SignInButtonNew';
 
