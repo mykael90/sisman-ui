@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Attributes } from 'react';
-import isMobile from '@/lib/isMobile';
+import isMobile from '@/src/lib/is-mobile';
 
 interface MobileDetectorProps {
   children: React.ReactNode;
@@ -35,7 +35,9 @@ export default function MobileDetector({ children }: MobileDetectorProps) {
     <>
       {React.Children.map(children, child => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child, { isMobile: isMobileState } as Partial<unknown> & Attributes);
+          return React.cloneElement(child, {
+            isMobile: isMobileState
+          } as Partial<unknown> & Attributes);
         }
         return child;
       })}
