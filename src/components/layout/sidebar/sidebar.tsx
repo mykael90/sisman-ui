@@ -52,8 +52,8 @@ const SidebarItemComponent: React.FC<SidebarItemProps> = ({
       >
         <Summary
           href={item.href}
-          className={`flex w-full cursor-pointer list-none items-center rounded-md px-4 py-2 focus:outline-none ${
-            isCollapsed ? 'hidden justify-center sm:block' : 'justify-start'
+          className={`flex w-full cursor-pointer list-none items-center rounded-md px-3 py-2 focus:outline-none ${
+            isCollapsed ? 'hidden justify-center sm:flex' : 'justify-start'
           }`}
           onClick={isCollapsed ? toggleCollapse : undefined}
         >
@@ -103,7 +103,7 @@ const SidebarItemComponent: React.FC<SidebarItemProps> = ({
       <NavLink
         href={item.href}
         className={`flex items-center rounded-md px-4 py-2 ${
-          isCollapsed ? 'hidden justify-center sm:block' : 'justify-start'
+          isCollapsed ? 'hidden justify-center sm:flex' : 'justify-start'
         }`}
         onClick={() => {
           if (isMobile) {
@@ -140,13 +140,11 @@ const Sidebar: React.FC = () => {
   return (
     <aside
       ref={sidebarRef}
-      className={`${sidebarRef.current ? 'block' : 'hidden'} overflow-x-hidden overflow-y-auto bg-gray-50 text-gray-700 transition-all duration-300 sm:flex dark:bg-gray-800 dark:text-gray-300 ${
-        isCollapsed
-          ? 'sm:w-16'
-          : 'w-full sm:w-64'
+      className={`${sidebarRef.current ? 'flex' : 'hidden'} overflow-x-hidden overflow-y-auto bg-gray-50 px-1 text-gray-700 transition-all duration-300 sm:flex dark:bg-gray-800 dark:text-gray-300 ${
+        isCollapsed ? 'sm:w-16' : 'w-full sm:w-64'
       }`}
     >
-      <nav className='mt-1'>
+      <nav className='mt-1 flex w-full flex-col'>
         <ul className='space-y-2'>
           {sidebarItems.map(item => (
             <li key={item.label}>
