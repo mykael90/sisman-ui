@@ -2,19 +2,18 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'; // Import for getting current route
-import { useState } from 'react';
 import { useSidebarContext } from '@/src/components/context/sidebar-provider';
 import Image from 'next/image';
 import logo from '@/assets/img/logo.svg';
 import logo_dark from '@/assets/img/dark-logo.svg';
 import { Menu } from 'lucide-react';
 import ThemeToggle from '../../theme/theme-toogle';
-import ButtonNavBar from '../ui/ButtonNavBar';
-import SiginButton from '../ui/SignInButton';
+import ButtonNavBar from '../ui/button-navbar';
+import SiginButton from '../ui/button-signin';
 
 const Navbar: React.FC = () => {
   const pathname = usePathname(); // Use usePathname instead of useRouter
-  const { isCollapsed, toggleCollapse } = useSidebarContext(); // Use the context
+  const { toggleCollapse } = useSidebarContext(); // Use the context
 
   return (
     <nav className='z-30 w-full bg-gray-50 py-1 shadow-md dark:bg-gray-800 dark:text-gray-300'>

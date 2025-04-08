@@ -37,15 +37,11 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
   children
 }) => {
   const isMobile = useMediaQuery('(max-width: 640px)');
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(isMobile); // Initial state based on isMobile
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(!isMobile); // Initial state based on isMobile
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
-
-  useEffect(() => {
-    setIsCollapsed(isMobile);
-  }, [isMobile]);
 
   const contextValue: SidebarContextProps = {
     isCollapsed,

@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { LogOut, Settings } from 'lucide-react';
-import ButtonNavBar from './ButtonNavBar';
+import ButtonNavBar from './button-navbar';
 import { Badge } from './badge';
 import UserAvatar from './user-avatar';
 
@@ -39,17 +39,10 @@ const SignInButton = () => {
       {session ? (
         <DropdownMenu>
           <DropdownMenuTrigger className='cursor-pointer'>
-            <div className='flex items-center gap-2'>
-              <UserAvatar
-                imageUrl={session?.user?.image}
-                name={session?.user?.name}
-              />
-              {session?.user?.login ? (
-                <Badge variant='outline' className='text-sisman-blue'>
-                  {session.user.login}
-                </Badge>
-              ) : null}
-            </div>
+            <UserAvatar
+              imageUrl={session?.user?.image}
+              name={session?.user?.name}
+            />
           </DropdownMenuTrigger>
           <DropdownMenuContent className='m-4 w-80 rounded-md bg-gray-50 shadow-lg'>
             <DropdownMenuLabel>
@@ -60,23 +53,30 @@ const SignInButton = () => {
                   size='xl'
                 />
                 <div className='flex flex-col gap-1'>
-                  <p className='font-medium text-stone-600'>
+                  <p className='font-medium'>
                     {session.user?.name || 'User name'}
                   </p>
-                  <p className='text-stone-400'>{session.user?.email}</p>
-                  <p className='text-stone-400'>{session.user?.login}</p>
+                  <p className=''>
+                    {session?.user?.login ? (
+                      <Badge variant='outline'>{session.user.login}</Badge>
+                    ) : null}
+                  </p>
+                  <p className=''>{session.user?.email}</p>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href='/profile' className='cursor-pointer flex items-center gap-2'>
+              <Link
+                href='/profile'
+                className='flex cursor-pointer items-center gap-2 dark:text-gray-300'
+              >
                 <Settings className='h-4 w-4' />
                 Meu Perfil
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem
-              className='flex cursor-pointer items-center gap-2'
+              className='flex cursor-pointer items-center gap-2 dark:text-gray-300'
               onSelect={() => signOut()}
             >
               <LogOut className='h-4 w-4' />

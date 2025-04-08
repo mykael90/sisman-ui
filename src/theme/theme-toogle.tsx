@@ -1,7 +1,7 @@
 'use client';
 
 import { Sun, Moon } from 'lucide-react';
-import ButtonNavBar from '@/components/ui/ButtonNavBar';
+import ButtonNavBar from '@/src/components/ui/button-navbar';
 import { useTheme } from 'next-themes';
 
 export default function ThemeToggle() {

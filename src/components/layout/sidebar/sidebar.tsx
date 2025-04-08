@@ -2,8 +2,8 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { useSidebarContext } from '@/src/components/context/sidebar-provider';
-import NavLink from '@/src/components/ui/NavLink';
-import Summary from '@/src/components/ui/Summary';
+import NavLink from '@/src/components/ui/navlink';
+import Summary from '@/src/components/ui/summary';
 import { DIVIDER_LABEL, SidebarItem, sidebarItems } from './sidebarItems';
 import { ChevronRight } from 'lucide-react';
 
@@ -137,20 +137,13 @@ const Sidebar: React.FC = () => {
     }
   };
 
-  // // Avoid pré-rendering in server side
-  // useEffect(() => {
-  //   setMounted(true);
-  // }, []);
-
-  // if (!mounted) {
-  //   return null;
-  // }
-
   return (
     <aside
       ref={sidebarRef}
-      className={`overflow-x-hidden overflow-y-auto bg-gray-50 text-gray-700 transition-all duration-300 dark:bg-gray-800 dark:text-gray-300 ${
-        isCollapsed ? 'w-0 sm:w-16' : 'w-full sm:w-64'
+      className={`${sidebarRef.current ? 'block' : 'hidden'} overflow-x-hidden overflow-y-auto bg-gray-50 text-gray-700 transition-all duration-300 sm:flex dark:bg-gray-800 dark:text-gray-300 ${
+        isCollapsed
+          ? 'sm:w-16'
+          : 'w-full sm:w-64'
       }`}
     >
       <nav className='mt-1'>

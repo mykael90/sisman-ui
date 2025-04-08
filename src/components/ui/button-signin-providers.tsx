@@ -20,7 +20,7 @@ const StiSiginButton = ({ callback: callbackUrl }: { callback: string }) => {
         className={classNameButton}
         variant='default'
         size='default'
-        onClick={() => signIn('sti', { callbackUrl })}
+        onClick={() => signIn('github', { callbackUrl })}
       >
         SOUGOV.BR
       </Button>

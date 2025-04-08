@@ -8,7 +8,7 @@ import {
   CardSeparator
 } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import ProvidersSigninButton from '../../../components/ui/ProvidersSigninButtons';
+import ProvidersSigninButton from '../../../components/ui/button-signin-providers';
 import { User, AlertTriangle, ShieldCheck, ExternalLink } from 'lucide-react';
 
 const authErrorMessages = {
