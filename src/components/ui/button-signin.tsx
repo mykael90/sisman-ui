@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import {
   DropdownMenu,
@@ -15,24 +14,12 @@ import { LogOut, Settings } from 'lucide-react';
 import ButtonNavBar from './button-navbar';
 import { Badge } from './badge';
 import UserAvatar from './user-avatar';
+import { usePathname } from 'next/navigation'; // Import for getting current route
 
 const SignInButton = () => {
   const { data: session } = useSession();
 
-  const getInitials = (name: string | null | undefined): string => {
-    if (!name) {
-      return 'U'; // Default to 'U' if no name is provided
-    }
-
-    const names = name.split(' ');
-    const firstNameInitial = names[0]?.charAt(0).toUpperCase() || '';
-    const lastNameInitial =
-      names.length > 1
-        ? names[names.length - 1]?.charAt(0).toUpperCase() || ''
-        : '';
-
-    return `${firstNameInitial}${lastNameInitial}`;
-  };
+  const userIsInSigninPage: boolean = usePathname().startsWith('/signin');
 
   return (
     <>
@@ -87,7 +74,7 @@ const SignInButton = () => {
       ) : (
         <ButtonNavBar
           className='rounded-full border px-2 py-1 font-normal dark:border-gray-600'
-          onClick={() => signIn()}
+          onClick={() => !userIsInSigninPage && signIn()}
         >
           Entrar
         </ButtonNavBar>
