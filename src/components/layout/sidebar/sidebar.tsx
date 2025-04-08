@@ -140,8 +140,8 @@ const Sidebar: React.FC = () => {
   return (
     <aside
       ref={sidebarRef}
-      className={`${sidebarRef.current ? 'flex' : 'hidden'} overflow-x-hidden overflow-y-auto bg-gray-50 px-1 text-gray-700 transition-all duration-300 sm:flex dark:bg-gray-800 dark:text-gray-300 ${
-        isCollapsed ? 'sm:w-16' : 'w-full sm:w-64'
+      className={`${sidebarRef.current ? 'flex' : 'hidden'} overflow-x-hidden overflow-y-auto bg-gray-50 text-gray-700 transition-all duration-300 sm:flex dark:bg-gray-800 dark:text-gray-300 ${
+        isCollapsed ? 'w:0 sm:w-16' : 'w-full sm:w-64'
       }`}
     >
       <nav className='mt-1 flex w-full flex-col'>
