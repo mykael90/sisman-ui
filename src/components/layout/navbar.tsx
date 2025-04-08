@@ -39,9 +39,6 @@ const Navbar: React.FC = () => {
               className='hidden dark:block'
             />
           </Link>
-          <div className='ps-2'>
-            <ThemeToggle></ThemeToggle>
-          </div>
         </div>
 
         {/* Current Route */}
@@ -57,7 +54,10 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* User Status (Simulated) */}
-        <div className='flex items-center pe-4'>
+        <div className='flex items-center gap-3 pe-4'>
+          <div className='ps-2'>
+            <ThemeToggle></ThemeToggle>
+          </div>
           <SiginButton />
         </div>
       </div>
