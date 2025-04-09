@@ -6,10 +6,11 @@ import { useSidebarContext } from '@/src/components/context/sidebar-provider';
 import Image from 'next/image';
 import logo from '@/assets/img/logo.svg';
 import logo_dark from '@/assets/img/dark-logo.svg';
-import { Menu } from 'lucide-react';
+import { Menu, Search } from 'lucide-react';
 import ThemeToggle from '../../theme/theme-toogle';
 import ButtonNavBar from '../ui/button-navbar';
 import SiginButton from '../ui/button-signin';
+import { Input } from '../ui/input';
 
 const Navbar: React.FC = () => {
   const pathname = usePathname(); // Use usePathname instead of useRouter
@@ -42,10 +43,18 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* Current Route */}
-        <div className='hidden items-center sm:flex'>
+        {/* <div className='hidden items-center sm:flex'>
           <span className='text-gray-600 dark:text-gray-400'>
             Current Route: {pathname}
           </span>
+        </div> */}
+
+        <div className='relative w-96'>
+          <Search className='absolute top-1/2 left-2 h-4 w-4 -translate-y-1/2 text-gray-400' />
+          <Input
+            placeholder='Search maintenance requests...'
+            className='border-gray-200 bg-gray-50 pl-8'
+          />
         </div>
 
         {/* Botões de redes sociais */}

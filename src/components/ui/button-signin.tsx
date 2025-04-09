@@ -26,10 +26,18 @@ const SignInButton = () => {
       {session ? (
         <DropdownMenu>
           <DropdownMenuTrigger className='cursor-pointer'>
-            <UserAvatar
-              imageUrl={session?.user?.image}
-              name={session?.user?.name}
-            />
+            <div className='flex items-center gap-5'>
+              <Badge
+                variant='outline'
+                className='hidden text-gray-600 sm:block'
+              >
+                {session.user?.name || 'User name'}
+              </Badge>
+              <UserAvatar
+                imageUrl={session?.user?.image}
+                name={session?.user?.name}
+              />
+            </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent className='m-4 w-80 rounded-md bg-gray-50 shadow-lg'>
             <DropdownMenuLabel>
