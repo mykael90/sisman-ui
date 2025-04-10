@@ -11,31 +11,37 @@ import LogoGoogle from '@/assets/img/logo-g-google.png';
 
 // Mantive a constante para o botão GOV.BR, mas ela será aplicada dentro do details agora
 const classNameButtonOthers =
-  'cursor-pointer flex h-12 w-full items-center justify-center gap-8 text-gray-800 md:text-inherit dark:text-gray-200';
+  'cursor-pointer flex h-12 w-full items-center sm:justify-center gap-3 text-gray-800 md:text-inherit dark:text-gray-200';
 
 const StiSiginButton = ({ callback: callbackUrl }: { callback: string }) => {
   return (
     <div className='gap- flex flex-col items-center justify-around'>
       {/* Botão principal UFRN.BR */}
       <Button
-        className='flex h-12 w-full cursor-pointer items-center justify-center gap-8 text-white'
+        className='flex h-12 w-full cursor-pointer gap-3 text-white sm:justify-center'
         size='default'
         onClick={() => signIn('sti', { callbackUrl })}
       >
-        <Image
-          src={LogoUFRNDark}
-          alt='Logo UFRN'
-          height={20}
-          className='brightness-100'
-        />
-        Entrar com UFRN.BR
+        <div className='w-15'>
+          <Image
+            src={LogoUFRNDark}
+            alt='Logo UFRN'
+            height={50}
+            width={50}
+            className='brightness-100'
+          />
+        </div>
+        <div className=''>Entrar com UFRN.BR</div>
       </Button>
 
       {/* Usando details e summary para o botão GOV.BR */}
       <details className='mt-4 w-full'>
         <summary className='cursor-pointer list-none text-center text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'>
-          Não tem conta na UFRN.BR?{' '}
+          <span className='hidden sm:inline-block'>
+            Não tem conta na UFRN.BR?{' '}
+          </span>
           <span className='text-sisman-teal hover:underline'>
+            {' '}
             Outras opções de login
           </span>
         </summary>
@@ -49,12 +55,15 @@ const StiSiginButton = ({ callback: callbackUrl }: { callback: string }) => {
             size='default'
             onClick={() => signIn('sti', { callbackUrl })} // Atenção: O provider 'sti' está sendo usado para GOV.BR também. Verifique se isso está correto.
           >
-            <Image
-              src={LogoGovBr}
-              alt='Logo GOV.BR'
-              height={20}
-              className='brightness-100'
-            />
+            <div className='w-15'>
+              <Image
+                src={LogoGovBr}
+                alt='Logo GOV.BR'
+                height={50}
+                width={50}
+                className='brightness-100'
+              />
+            </div>
             Entrar com GOV.BR
           </Button>
           <Button
@@ -63,20 +72,26 @@ const StiSiginButton = ({ callback: callbackUrl }: { callback: string }) => {
             size='default'
             onClick={() => signIn('sti', { callbackUrl })} // Atenção: O provider 'sti' está sendo usado para GOV.BR também. Verifique se isso está correto.
           >
-            <Image
-              src={LogoGoogle}
-              alt='Logo Google'
-              height={20}
-              className='brightness-100'
-            />
+            <div className='w-15'>
+              <Image
+                src={LogoGoogle}
+                alt='Logo Google'
+                height={50}
+                width={30}
+                className='brightness-100'
+              />
+            </div>
             Entrar com Google
           </Button>
           <Link
             href='#'
             className='text-center text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
           >
-            Problemas para entrar?{' '}
+            <span className='hidden sm:inline-block'>
+              Problemas para entrar?{' '}
+            </span>
             <span className='text-sisman-teal hover:underline'>
+              {' '}
               Contate o suporte
             </span>
           </Link>

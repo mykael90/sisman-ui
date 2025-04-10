@@ -86,7 +86,7 @@ export default async function SignIn({
 
       {/* 3. Lado direito - Formulário de Login */}
       {/* Mantém padding geral para espaçamento */}
-      <div className='relative z-10 mt-40 flex w-full items-baseline justify-center p-8 md:w-[32rem]'>
+      <div className='relative z-10 mt-40 flex w-full items-baseline justify-center p-8 sm:mt-60 md:w-[32rem]'>
         {/* Caixa do formulário: Aplicando estilos de "vidro fosco" SÓ em telas pequenas */}
         <div className='w-full max-w-md space-y-6 rounded-lg bg-white/80 p-8 shadow-xl backdrop-blur-lg md:rounded-none md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none dark:bg-gray-950/80 md:dark:bg-transparent'>
           <div className='text-center'>
