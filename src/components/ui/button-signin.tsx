@@ -15,6 +15,7 @@ import ButtonNavBar from './button-navbar';
 import { Badge } from './badge';
 import UserAvatar from './user-avatar';
 import { usePathname } from 'next/navigation'; // Import for getting current route
+import getFirstAndLastName from '../../lib/getFirstAndLastName';
 
 const SignInButton = () => {
   const { data: session } = useSession();
@@ -26,20 +27,17 @@ const SignInButton = () => {
       {session ? (
         <DropdownMenu>
           <DropdownMenuTrigger className='cursor-pointer'>
-            <div className='flex items-center gap-5'>
-              <Badge
-                variant='outline'
-                className='hidden text-gray-600 sm:block'
-              >
-                {session.user?.name || 'User name'}
-              </Badge>
+            <div className='flex items-center gap-2'>
               <UserAvatar
                 imageUrl={session?.user?.image}
                 name={session?.user?.name}
               />
+              <span className='hidden text-sm text-gray-600 sm:block dark:text-gray-300'>
+                {getFirstAndLastName(session?.user?.name)}
+              </span>
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className='m-4 w-80 rounded-md bg-gray-50 shadow-lg'>
+          <DropdownMenuContent className='mt-1 mr-5 w-80 rounded-md bg-gray-50 shadow-lg'>
             <DropdownMenuLabel>
               <div className='flex items-center gap-2'>
                 <UserAvatar

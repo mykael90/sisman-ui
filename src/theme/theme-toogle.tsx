@@ -12,8 +12,8 @@ export default function ThemeToggle() {
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       title={`Alterar tema`}
     >
-      <Sun className='hidden h-6 w-6 text-yellow-100 dark:block' />
-      <Moon className='text-sisman-blue h-6 w-6 dark:hidden' />
+      <Sun className='hidden h-6 w-6 text-yellow-100/50 dark:block' />
+      <Moon className='text-sisman-blue/70 h-6 w-6 dark:hidden' />
     </ButtonNavBar>
   );
 }

@@ -1,6 +1,6 @@
 // export const dynamic = 'force-dynamic';
 
-import fetchStiBuildTime from '../../lib/api-sti-build-time';
+import fetchStiBuildTime from '../../../lib/api-sti-build-time';
 
 interface sistemaInterface {
   ['id-sistema']: number;

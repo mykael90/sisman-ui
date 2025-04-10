@@ -1,12 +1,10 @@
 import { getProviders, signIn } from 'next-auth/react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  CardSeparator
-} from '@/components/ui/card';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import HeroLogin from '@/assets/img/hero-login.jpg';
+import Logo from '@/assets/img/logo.svg';
+import LogoDark from '@/assets/img/logo-dark.svg';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import ProvidersSigninButton from '../../../components/ui/button-signin-providers';
 import { User, AlertTriangle, ShieldCheck, ExternalLink } from 'lucide-react';
@@ -44,56 +42,90 @@ export default async function SignIn({
   const providers = await getProviders();
 
   return (
-    <main className='flex w-full flex-col items-center p-10'>
-      <Card className='w-full max-w-md'>
-        <CardHeader className='flex items-center space-x-4'>
-          <ShieldCheck className='h-10 w-10 text-blue-500' />
-          <CardTitle>Segurança e Autenticação</CardTitle>
-        </CardHeader>
-        <CardSeparator />
-        <CardHeader className='flex flex-col items-center justify-center space-y-2 py-0'>
-          <User className='h-10 w-10 text-blue-500 dark:text-gray-200' />
-          <CardTitle>Entrar com</CardTitle>
-        </CardHeader>
-        <CardContent className='space-y-4'>
-          <ProvidersSigninButton callback={callbackUrl} />
-          {authError && (
-            <Alert variant='destructive'>
-              <AlertTriangle className='h-4 w-4' />
-              <AlertTitle>Erro</AlertTitle>
-              <AlertDescription>{authError}</AlertDescription>
-            </Alert>
-          )}
-        </CardContent>
-        <CardSeparator />
-        <CardContent className='space-y-4'>
-          <CardDescription className='text-justify'>
-            Como medida de proteção, adotamos um modelo de autenticação externa,
-            em que as credenciais dos usuários são validadas exclusivamente por
-            provedores de serviços terceiros confiáveis (como UFRN, GOV.BR,
-            etc.).
-            <a
-              href='https://www.gov.br/governodigital/pt-br/estrategias-e-governanca-digital/transformacao-digital/ferramentas/autenticacao-gov.br'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              <ExternalLink className='ml-1 inline-block h-4 w-4' />
-              <span className='sr-only'>
-                Mais informações sobre autenticação GOV.BR (abre em uma nova
-                aba)
-              </span>
-            </a>
-          </CardDescription>
-          <CardDescription className='text-justify'>
-            Dessa forma, as senhas nunca são armazenadas em nossos servidores,
-            mitigando riscos associados a vazamentos ou acessos não autorizados.
-            A gestão de credenciais fica integralmente sob responsabilidade do
-            provedor escolhido pelo usuário, assegurando maior robustez no
-            processo de autenticação.
-            {/* <ExternalLink className='ml-1 inline-block h-4 w-4' /> */}
-          </CardDescription>
-        </CardContent>
-      </Card>
-    </main>
+    <div className='relative flex min-h-screen'>
+      {/* 1. Fundo para telas pequenas (md:hidden) com maior desfoque */}
+      <div className='absolute inset-0 z-0 md:hidden'>
+        <Image
+          src={HeroLogin}
+          alt='Data center background'
+          fill
+          // Aplicando desfoque mais forte (blur-md)
+          className='object-cover blur-md'
+          priority
+        />
+        {/* Overlay para clarear/escurecer e melhorar contraste */}
+        <div className='absolute inset-0 bg-white opacity-50 dark:bg-black dark:opacity-30'></div>
+      </div>
+
+      {/* 2. Lado esquerdo - Visível apenas em telas médias e grandes (hidden md:flex) */}
+      <div className='relative hidden flex-1 flex-col justify-center p-12 text-white md:flex'>
+        {/* Imagem de fundo para o lado esquerdo (escura) */}
+        <div className='absolute inset-0 z-0'>
+          <Image
+            src={HeroLogin}
+            alt='Data center'
+            fill
+            className='bg-blue-900 object-cover brightness-50'
+            priority
+          />
+        </div>
+        {/* Conteúdo de texto sobre a imagem (lado esquerdo) */}
+        <div className='relative z-10'>
+          <div className='mb-8'></div>
+          <h1 className='mb-6 text-4xl leading-tight font-bold'>
+            Gestão Inteligente para um Futuro Resiliente
+          </h1>
+          <p className='max-w-150 text-lg leading-relaxed opacity-90'>
+            Acesse a plataforma unificada para monitoramento, gerenciamento e
+            manutenção de ativos de infraestrutura. Simplifique as operações,
+            aprimore a segurança e garanta o máximo de tempo de atividade em
+            toda a sua rede.
+          </p>
+        </div>
+      </div>
+
+      {/* 3. Lado direito - Formulário de Login */}
+      {/* Mantém padding geral para espaçamento */}
+      <div className='relative z-10 mt-40 flex w-full items-baseline justify-center p-8 md:w-[32rem]'>
+        {/* Caixa do formulário: Aplicando estilos de "vidro fosco" SÓ em telas pequenas */}
+        <div className='w-full max-w-md space-y-6 rounded-lg bg-white/80 p-8 shadow-xl backdrop-blur-lg md:rounded-none md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none dark:bg-gray-950/80 md:dark:bg-transparent'>
+          <div className='text-center'>
+            {/* Ajuste de cor de texto para contraste na caixa */}
+            <Image
+              src={Logo}
+              alt='Logo'
+              className='mx-auto h-12 w-auto dark:hidden'
+              width={128}
+              height={128}
+            ></Image>
+            <Image
+              src={LogoDark}
+              alt='Logo'
+              className='mx-auto hidden h-12 w-auto dark:block'
+              width={128}
+              height={128}
+            ></Image>
+            <p className='mt-4 text-gray-700 dark:text-gray-300'>
+              Por favor, se autentique para continuar
+            </p>
+          </div>
+
+          <div className='space-y-4'>
+            {/* Botões de Login - Estilos simplificados, o container cuida do fundo */}
+            <ProvidersSigninButton callback={callbackUrl} />
+            {authError && (
+              <Alert variant='destructive'>
+                <AlertTriangle className='h-4 w-4' />
+                <AlertTitle>Erro</AlertTitle>
+                <AlertDescription>{authError}</AlertDescription>
+              </Alert>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
+
+// NOTA: Os SVGs dos ícones dos botões foram omitidos por brevidade (`<svg>...</svg>`).
+// Mantenha os SVGs originais no seu código.

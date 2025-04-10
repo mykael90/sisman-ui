@@ -1,10 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import Navbar from '@/src/components/layout/navbar';
-import Sidebar from '@/src/components/layout/sidebar/sidebar';
-import Footer from '@/src/components/layout/footer';
-import Main from '@/src/components/layout/main';
 import Providers from './providers';
 
 const geistSans = Geist({
@@ -32,19 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>
-          <div className='flex min-h-screen flex-col'>
-            <div className='bg-sisman-blue dark:bg-sisman-green z-50 h-2 w-full'></div>
-            <Navbar />
-            <div className='flex flex-1 flex-col'>
-              <div className='flex h-full w-full flex-1 flex-row'>
-                <Sidebar />
-                <Main>{children}</Main>
-              </div>
-              <Footer /> {/* Footer will stick to the bottom */}
-            </div>
-          </div>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

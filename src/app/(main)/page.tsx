@@ -1,7 +1,7 @@
-import HeroBanner from '../components/layout/main/hero-banner';
-import MaintenanceStats from '../components/layout/main/maintenance-stats';
-import AssetMapping from '../components/layout/main/asset-mapping';
-import RecentRequests from '../components/layout/main/recent-requests';
+import HeroBanner from '../../components/layout/main/hero-banner';
+import MaintenanceStats from '../../components/layout/main/maintenance-stats';
+import AssetMapping from '../../components/layout/main/asset-mapping';
+import RecentRequests from '../../components/layout/main/recent-requests';
 
 export default function MainContent() {
   return (
