@@ -41,7 +41,7 @@ export default function STIOAuthProvider<P extends STIProfile>(
         grant_type: 'authorization_code'
       },
       async request(context) {
-        console.log(`context: ${JSON.stringify(context)}`);
+        console.log(`\ncontext: ${JSON.stringify(context)}\n`);
         const { provider, params } = context;
         if (!provider.token) {
           throw new Error('Provider token URL is missing.');
@@ -64,7 +64,7 @@ export default function STIOAuthProvider<P extends STIProfile>(
     },
     userinfo: {
       async request({ tokens }) {
-        console.log(`$$1 tokens STI: ${JSON.stringify(tokens)}`);
+        console.log(`\n$$1 tokens STI: ${JSON.stringify(tokens)}\n`);
         if (!process.env.STI_USERINFO_URL) {
           throw new Error('STI_USERINFO_URL environment variable is missing.');
         }
@@ -81,7 +81,7 @@ export default function STIOAuthProvider<P extends STIProfile>(
 
         const userInfo = await userInfoResponse.json();
 
-        console.log(`$$2 userInfo STI: ${JSON.stringify(userInfo)}`);
+        console.log(`\n$$2 userInfo STI: ${JSON.stringify(userInfo)}\n`);
 
         return {
           sub: userInfo['id-usuario'],
@@ -93,8 +93,8 @@ export default function STIOAuthProvider<P extends STIProfile>(
       }
     },
     profile(profile, tokens) {
-      console.log(`$$3 profile STI: ${JSON.stringify(profile)}`);
-      console.log(`$$4 tokens STI: ${JSON.stringify(tokens)}`);
+      console.log(`\n$$3 profile STI: ${JSON.stringify(profile)}\n`);
+      console.log(`\n$$4 tokens STI: ${JSON.stringify(tokens)}\n`);
 
       type Decoded = {
         sub: string;
@@ -117,7 +117,7 @@ export default function STIOAuthProvider<P extends STIProfile>(
           Buffer.from(tokens.id_token.split('.')[1], 'base64').toString()
         );
       } else {
-        console.log(`$$5 ID Token não encontrado: ${tokens.id_token}`);
+        console.log(`\n$$5 ID Token não encontrado: ${tokens.id_token}\n`);
         // Use the sub from the userinfo response (profile)
         decoded = {
           sub: profile.sub,
