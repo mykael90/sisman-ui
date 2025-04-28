@@ -22,7 +22,7 @@ import getNameFromLogin from '../../lib/getNameFromLogin';
 // É uma boa prática usar uma variável de ambiente pública para isso
 const UFRN_LOGOUT_URL =
   process.env.NEXT_PUBLIC_UFRN_LOGOUT_URL ||
-  'https://autenticacao.info.ufrn.br/sso-server/logout';
+  'https://autenticacao.info.ufrn.br/authz-server/j_spring_cas_security_logout';
 
 const SignInButton = () => {
   const { data: session } = useSession();
@@ -102,38 +102,33 @@ export default SignInButton;
 
 // ---> Função para lidar com o logout manual <---
 const handleManualSignOut = async () => {
-  //TODO: Endpoint de logout da UFRN não funciona para a aplicação. Ele não limpa o registro de acesso do usuário, ou seja, não é possível alterar o usuário sem limpar o cache do navegador ou esperar o tempo de expiração do token.
+  // ---> Ponto de atenção: Parâmetro de redirecionamento <---
+  // O código Java *não* mostra adição de um parâmetro 'service' ou
+  // 'post_logout_redirect_uri' a esta URL específica de logout do Spring/CAS.
+  // Isso pode significar que:
+  //    a) Este endpoint NÃO suporta redirecionamento de volta automático.
+  //       O usuário simplesmente verá uma página de logout da UFRN.
+  //    b) O parâmetro é diferente (talvez 'targetUrl'?).
+  // É MELHOR TESTAR SEM O PARÂMETRO PRIMEIRO.
 
-  // 1. Defina para onde o *provedor UFRN* deve redirecionar o usuário
-  //    APÓS o logout no SSO ser concluído.
-  //    Consulte a documentação da UFRN para saber qual parâmetro usar
-  //    (ex: 'service', 'post_logout_redirect_uri', 'redirect_uri').
-  //    Assumindo que seja 'service' (comum em sistemas CAS):
-  const postUfrnLogoutRedirect = `${window.location.origin}/`; // Volta para a home da sua app
-  const ufrnLogoutUrlWithRedirect = `${UFRN_LOGOUT_URL}?service=${encodeURIComponent(postUfrnLogoutRedirect)}`;
+  // URL de logout a ser usada (sem redirect por enquanto)
+  // const ufrnLogoutUrlToUse = UFRN_LOGOUT_URL;
 
-  //    *** IMPORTANTE: Verifique com a UFRN se eles suportam esse redirecionamento
-  //    *** e qual o nome correto do parâmetro ('service' é um palpite).
-  //    *** Se não suportarem, use apenas UFRN_LOGOUT_URL e o usuário
-  //    *** não voltará automaticamente para sua aplicação.
-  // const ufrnLogoutUrlToUse = UFRN_LOGOUT_URL; // Caso não haja redirect
+  // --- Se quiser *tentar* adicionar um parâmetro (verificar documentação UFRN!) ---
+  const postUfrnLogoutRedirect = `${window.location.origin}/`;
+  const ufrnLogoutUrlWithRedirect = `${UFRN_LOGOUT_URL}?service=${encodeURIComponent(postUfrnLogoutRedirect)}`; // Usando 'service' como palpite
+  const ufrnLogoutUrlToUse = ufrnLogoutUrlWithRedirect; // Descomente para testar com redirect
+  // ------------------------------------------------------------------------------
 
   try {
-    // 2. Faça o logout da sessão NextAuth localmente *sem* redirecionar ainda.
-    //    Isso limpa o cookie de sessão da sua aplicação.
+    // 1. Faça o logout da sessão NextAuth localmente
     await signOut({ redirect: false });
 
-    // 3. Redirecione o navegador do usuário para a URL de logout do provedor UFRN.
-    //    Use a URL com o parâmetro de redirect se ele for suportado.
-
-    window.location.href = ufrnLogoutUrlWithRedirect;
-
-    // Se não houver redirect suportado:
-    // window.location.href = ufrnLogoutUrlToUse;
+    // 2. Redirecione o navegador para a URL de logout CORRETA da UFRN
+    window.location.href = ufrnLogoutUrlToUse;
   } catch (error) {
-    console.error('Erro ao tentar deslogar:', error);
-    // Mesmo se o signOut local falhar, ainda pode ser útil tentar
-    // redirecionar para o logout do provedor como fallback.
-    window.location.href = ufrnLogoutUrlWithRedirect; // ou ufrnLogoutUrlToUse
+    console.error('Erro ao tentar deslogar localmente:', error);
+    // Mesmo com erro local, tenta redirecionar para o logout UFRN
+    window.location.href = ufrnLogoutUrlToUse;
   }
 };
