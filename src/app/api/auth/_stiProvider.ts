@@ -136,7 +136,7 @@ export default function STIOAuthProvider<P extends STIProfile>(
         login: decoded.login || ''
       };
     },
-    checks: ['pkce', 'state'], // Se necessário
+
     options
   };
 }
