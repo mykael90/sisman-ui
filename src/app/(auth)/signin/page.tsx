@@ -22,6 +22,7 @@ const authErrorMessages = {
   CredentialsSignin:
     'Sign in failed. Check the details you provided are correct.',
   SessionRequired: 'Please sign in to access this page.',
+  SessionExpired: 'Your session has expired. Please sign in again.',
   default: 'Unable to sign in.'
 };
 

@@ -4,15 +4,13 @@ import GithubProvider from 'next-auth/providers/github';
 import { AdapterUser } from 'next-auth/adapters';
 import { JWT, encode, decode } from 'next-auth/jwt';
 import Logger from '@/lib/logger';
-
-// Importe a lógica de autorização do novo arquivo
-import { handleAuthorizationLogic } from '@/lib/auth/authorization';
+import { handleAuthorizationLogic } from '@/src/lib/auth/authorization-sisman';
+import refreshUfrnAccessToken from '../../../lib/auth/refresh-ufrn-access-token';
 
 const logger = new Logger('authOptions');
 
 export const authOptions: AuthOptions = {
   providers: [
-    // ... seus providers ...
     GithubProvider({
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string
@@ -34,30 +32,27 @@ export const authOptions: AuthOptions = {
   },
   callbacks: {
     async signIn({ user, account, profile }) {
+      // ... (código do signIn inalterado)
       logger.debug(`
 --------------------------------------------------
 signIn Callback - Dados Recebidos
 --------------------------------------------------
-
 User: ${JSON.stringify(user, null, 2)}
-
 Account: ${JSON.stringify(account, null, 2)}
-
 Profile: ${JSON.stringify(profile, null, 2)}
-
 --------------------------------------------------
 `);
       return true;
     },
     async redirect({ url, baseUrl }) {
+      // ... (código do redirect inalterado)
       logger.debug(`
 --------------------------------------------------
-signIn Callback - Dados Recebidos
+Redirect Callback - Dados Recebidos
 --------------------------------------------------
-
 URL: ${JSON.stringify(url, null, 2)}
-
 Base URL: ${JSON.stringify(baseUrl, null, 2)}
+--------------------------------------------------
 `);
       if (url.startsWith('/')) return `${baseUrl}${url}`;
       else if (new URL(url).origin === baseUrl) return url;
@@ -70,7 +65,7 @@ Base URL: ${JSON.stringify(baseUrl, null, 2)}
       profile
     }: {
       token: JWT;
-      user?: AdapterUser | any; // Mantenha 'any' se a estrutura do user variar
+      user?: AdapterUser | any;
       account?: any;
       profile?: any;
     }): Promise<JWT> {
@@ -78,132 +73,99 @@ Base URL: ${JSON.stringify(baseUrl, null, 2)}
 --------------------------------------------------
 JWT Callback - Dados Recebidos (Antes do Processamento)
 --------------------------------------------------
-
 Token: ${JSON.stringify(token, null, 2)}
 User: ${JSON.stringify(user, null, 2)}
 Account: ${JSON.stringify(account, null, 2)}
 Profile: ${JSON.stringify(profile, null, 2)}
+--------------------------------------------------
 `);
 
-      //TODO: Dividir esse código, ficou muito grande. Fazer revalidação para o token que acessa a API do SISMAN. Só foi feita a revalidação para o da UFRN.
+      let processedToken = token; // Usar uma variável temporária
 
-      // Durante o login inicial (quando account e user estão presentes)
+      // 1. Login Inicial ou Primeira Chamada JWT pós-login
       if (account && user) {
-        logger.info(`Primeiro acesso, obtendo informações básicas do provedor`);
-        // Preenche informações básicas do provedor
-        token.id = user.id;
-        token.accessToken = account.access_token; // Token do provedor (UFRN)
-        token.refreshToken = account.refresh_token; // Refresh token do provedor (UFRN)
-        token.expiresAt = account.expires_at; // Expiração do token do provedor (UFRN)
-        token.provider = account.provider;
-        token.login = user.login; // Adiciona o login, se existir
+        logger.info(
+          `Primeiro acesso ou chamada inicial, processando dados do provedor e autorização.`
+        );
+        processedToken = {
+          ...processedToken,
+          id: user.id,
+          accessToken: account.access_token, // Token do provedor (UFRN)
+          refreshToken: account.refresh_token, // Refresh token do provedor (UFRN)
+          expiresAt: account.expires_at, // Expiração do token do provedor (UFRN)
+          provider: account.provider,
+          login: user.login // Adiciona o login, se existir
+        };
 
-        // ----- INÍCIO DA LÓGICA DE AUTORIZAÇÃO DELEGADA -----
+        // Lógica de autorização delegada a API Sisman
         const authorizationFields = await handleAuthorizationLogic(user);
-        // Mescla os campos retornados pela lógica de autorização no token principal
-        token = { ...token, ...authorizationFields };
-        // ----- FIM DA LÓGICA DE AUTORIZAÇÃO DELEGADA -----
-      } else if (Date.now() < Number(token.expiresAt) * 1000) {
-        // Subsequent logins, but the `access_token` is still valid
-        //não precisa fazer nada
-        logger.info(`Token UFRN ainda válido, sem necessidade de renovação`);
-      } else {
-        // Subsequent logins, but the `access_token` has expired, try to refresh it
-        logger.warn(`Token UFRN expirado, tentativa de renovação`);
-        if (!token.refreshToken) throw new TypeError('Missing refresh_token');
-
-        try {
-          // The `token_endpoint` can be found in the provider's documentation. Or if they support OIDC,
-          const response = await fetch(process.env.UFRN_TOKEN_URL as string, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-              client_id: process.env.UFRN_CLIENT_ID as string,
-              client_secret: process.env.UFRN_CLIENT_SECRET as string,
-              grant_type: 'refresh_token',
-              refresh_token: token.refreshToken as string
-            })
-          });
-          const tokensOrError = await response.json();
-
-          if (!response.ok) throw tokensOrError;
-
-          const newToken = tokensOrError as {
-            access_token: string;
-            expires_in: number;
-            refresh_token?: string;
-          };
-
-          token = {
-            ...token,
-            accessToken: newToken.access_token,
-            refreshToken: newToken.refresh_token
-              ? newToken.refresh_token
-              : token.refreshToken,
-            expiresAt: Math.floor(Date.now() / 1000 + newToken.expires_in)
-          };
-
-          logger.info(`Token UFRN renovado com sucesso`);
-        } catch (error) {
-          console.error('Error refreshing access_token', error);
-          // If we fail to refresh the token, return an error so we can handle it on the page
-          token.error = 'RefreshTokenError';
-        }
+        processedToken = { ...processedToken, ...authorizationFields };
+      }
+      // 2. Validação/Renovação do Token UFRN (se aplicável e expirado)
+      // Verifica se é uma chamada subsequente e se o token UFRN está expirado
+      else if (Date.now() >= Number(processedToken.expiresAt) * 1000) {
+        processedToken = await refreshUfrnAccessToken(processedToken);
+      }
+      // 3. Validação/Renovação do Token SISMAN (TODO)
+      // else if (processedToken.provider === 'sisman' && /* condição de expiração do token SISMAN expiresAtAuthorization */) {
+      //   logger.info('Token SISMAN expirado ou inválido, tentando renovar/revalidar...');
+      //   // processedToken = await refreshSismanAccessToken(processedToken); // Função a ser criada
+      // }
+      else {
+        // Token (UFRN ou outro) ainda válido, não faz nada
+        logger.info(`Token [${processedToken.provider}] ainda válido.`);
       }
 
       logger.debug(`
 --------------------------------------------------
 JWT Callback - Token Após Processamento
 --------------------------------------------------
-
-Token: ${JSON.stringify(token, null, 2)}
-
+Token: ${JSON.stringify(processedToken, null, 2)}
 --------------------------------------------------
 `);
-      return token;
+      return processedToken; // Retorna o token processado
     },
     async session({ session, token, user }) {
+      // ... (código do session inalterado, mas agora recebe o token potencialmente atualizado)
       logger.debug(`
 --------------------------------------------------
 Session Callback - Dados Recebidos (Antes do Processamento)
 --------------------------------------------------
-Session: ${JSON.stringify(session, null, 2)}\nToken: ${JSON.stringify(token, null, 2)}`);
+Session: ${JSON.stringify(session, null, 2)}
+Token: ${JSON.stringify(token, null, 2)}
+--------------------------------------------------
+`);
       // Mapeia os dados do JWT (token) para o objeto `session`
       session.user.id = token.sub || token.id;
-      session.user.login = token.login as string | undefined; // Tipagem explícita
-      session.provider = token.provider as string | undefined; // Tipagem explícita
+      session.user.login = token.login as string | undefined;
+      session.provider = token.provider as string | undefined;
 
       // Expõe dados da API de autorização
-      session.apiAccessToken = token.apiAccessToken as string | null;
+      session.accessTokenSisman = token.accessTokenSisman as string | null;
       session.roles = token.roles as string[] | undefined;
       session.authorizationError = token.authorizationError as
         | string
         | undefined;
 
-      // Expõe erro genérico do next-auth
+      // Expõe erro genérico do next-auth (incluindo erros de refresh)
       session.error = token.error as string | undefined;
-
-      // Removido: Geralmente não se expõe o token do provedor ao cliente
-      // session.providerAccessToken = token.accessToken as string;
 
       logger.debug(`
 --------------------------------------------------
 Session Callback - Session Após Processamento
 --------------------------------------------------
-
 Session: ${JSON.stringify(session, null, 2)}
-
 --------------------------------------------------
 `);
       return session;
     }
   },
   jwt: {
-    // Suas funções encode/decode personalizadas (ou as padrão se remover)
+    // ... (encode/decode inalterados)
     encode: async ({ secret, token, maxAge }) => {
-      logger.debug(`
-JWT Encode - Payload a ser codificado/criptografado: ${JSON.stringify(token, null, 2)}
-`);
+      logger.debug(
+        `JWT Encode - Payload a ser codificado/criptografado: ${JSON.stringify(token, null, 2)}`
+      );
       const encodedToken = await encode({ secret, token, maxAge });
       logger.debug(`JWT Encode - Token JWE/JWS gerado: ${encodedToken}`);
       return encodedToken;
@@ -222,5 +184,3 @@ JWT Encode - Payload a ser codificado/criptografado: ${JSON.stringify(token, nul
   secret: process.env.NEXTAUTH_SECRET
   // adapter: MongoDBAdapter(clientPromise)
 };
-
-// Remova as funções createAuthorizationToken e verifyAuthorizationToken daqui

@@ -15,8 +15,11 @@ interface AuthorizationRequestUserData {
 
 // Interface para a resposta esperada da sua API de autorização
 interface AuthorizationApiResponse {
-  accessToken: string;
+  access_token: string;
   roles?: number[];
+  error?: string;
+  expires_in?: number;
+  refresh_token?: string;
 }
 
 // Função auxiliar para criar o token JWT temporário para a API de autorização
@@ -28,7 +31,9 @@ async function createAuthorizationRequestToken(
     throw new Error('AUTHORIZATION_JWT_SECRET is not defined');
   }
   const secret = new TextEncoder().encode(process.env.AUTHORIZATION_JWT_SECRET);
-  logger.debug(`Authorization JWT Secret: ${process.env.AUTHORIZATION_JWT_SECRET}`);
+  logger.debug(
+    `Authorization JWT Secret: ${process.env.AUTHORIZATION_JWT_SECRET}`
+  );
 
   const alg = 'HS256';
 
@@ -99,7 +104,7 @@ export async function handleAuthorizationLogic(
   user: AdapterUser | any // Use 'any' for flexibility if user structure varies
 ): Promise<Partial<JWT>> {
   const fieldsToAdd: Partial<JWT> = {
-    apiAccessToken: null,
+    accessTokenSisman: null,
     roles: [],
     authorizationError: undefined
   };
@@ -107,8 +112,9 @@ export async function handleAuthorizationLogic(
   // Verifica se temos os dados necessários do usuário e a secret
   if (user?.email && process.env.AUTHORIZATION_JWT_SECRET) {
     logger.info(
-      `Fetching authorization token for user: email=${user.email}, login=${user.login}, name=${user.name}`
-    , { user });
+      `Fetching authorization token for user: email=${user.email}, login=${user.login}, name=${user.name}`,
+      { user }
+    );
     try {
       // Prepara os dados do usuário para o token de requisição
       const userDataForToken: AuthorizationRequestUserData = {
@@ -123,10 +129,10 @@ export async function handleAuthorizationLogic(
       const authorizationData = await fetchAuthorizationApiToken(requestToken);
 
       if (authorizationData) {
-        fieldsToAdd.apiAccessToken = authorizationData.accessToken;
+        fieldsToAdd.accessTokenSisman = authorizationData.access_token;
         fieldsToAdd.roles = authorizationData.roles;
         logger.info('Authorization data obtained:', {
-          apiAccessToken: !!authorizationData.accessToken,
+          accessTokenSisman: !!authorizationData.access_token,
           roles: authorizationData.roles
         });
       } else {
@@ -137,7 +143,8 @@ export async function handleAuthorizationLogic(
         );
       }
     } catch (error) {
-      fieldsToAdd.authorizationError = 'Error during authorization token creation/fetch';
+      fieldsToAdd.authorizationError =
+        'Error during authorization token creation/fetch';
       logger.error('Error in authorization logic:', error);
     }
   } else if (!user?.email) {

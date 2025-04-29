@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Verifica se o token da API de autorização existe
-  if (!session.apiAccessToken) {
+  if (!session.accessTokenSisman) {
     console.error(
       'User authenticated but lacks API authorization token.',
       session.authorizationError
@@ -32,12 +32,12 @@ export async function GET(request: NextRequest) {
     );
   }
   try {
-    // Use o session.apiAccessToken para chamar sua outra API backend
+    // Use o session.accessTokenSisman para chamar sua outra API backend
     const backendApiResponse = await fetch(
       'https://sistema.api/some-resource',
       {
         headers: {
-          Authorization: `Bearer ${session.apiAccessToken}`
+          Authorization: `Bearer ${session.accessTokenSisman}`
         }
       }
     );
