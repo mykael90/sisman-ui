@@ -136,7 +136,7 @@ Token: ${JSON.stringify(token, null, 2)}
 --------------------------------------------------
 `);
       // Mapeia os dados do JWT (token) para o objeto `session`
-      session.user.id = token.sub || token.id;
+      session.user.id = (token.sub || token.id) as string;
       session.user.login = token.login as string | undefined;
       session.provider = token.provider as string | undefined;
 
