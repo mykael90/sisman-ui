@@ -7,11 +7,11 @@ interface TokenResponse {
 
 async function authenticate(): Promise<TokenResponse> {
   const formData = new URLSearchParams();
-  formData.append('client_id', process.env.STI_CLIENT_ID || '');
-  formData.append('client_secret', process.env.STI_CLIENT_SECRET || '');
+  formData.append('client_id', process.env.UFRN_CLIENT_ID || '');
+  formData.append('client_secret', process.env.UFRN_CLIENT_SECRET || '');
   formData.append('grant_type', 'client_credentials'); // ou outro grant_type conforme sua API
 
-  const response = await fetch(process.env.STI_TOKEN_URL, {
+  const response = await fetch(process.env.UFRN_TOKEN_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -38,7 +38,7 @@ export default async function fetchStiBuildTime(
   const headers = {
     ...options.headers,
     Authorization: `Bearer ${credentials.access_token}`,
-    'X-API-Key': process.env.STI_XAPI_KEY || '', // Chave de API em todas as requisições
+    'X-API-Key': process.env.UFRN_XAPI_KEY || '', // Chave de API em todas as requisições
     'Content-Type': 'application/json' // Header padrão
   };
 

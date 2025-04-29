@@ -12,7 +12,7 @@ interface sistemaInterface {
 
 async function getSistemas(): Promise<sistemaInterface[]> {
   const response = await fetchStiBuildTime(
-    `${process.env.STI_API_URL}/comum/v1/sistemas`,
+    `${process.env.UFRN_API_URL}/comum/v1/sistemas`,
     {
       // cache: 'no-store'
       // next: { revalidate: 10 }

@@ -1,5 +1,5 @@
 import { OAuthUserConfig, OAuthConfig } from 'next-auth/providers/oauth';
-import logger from '@/lib/logger';
+import Logger from '@/lib/logger';
 
 export interface STIProfile {
   sub: string;
@@ -15,6 +15,8 @@ interface optionsComplement {
   tokenUrl?: string;
   redirectUri?: string;
 }
+
+const logger = new Logger('stiProvider');
 
 export default function STIOAuthProvider<P extends STIProfile>(
   options: OAuthUserConfig<P> & optionsComplement
@@ -86,17 +88,17 @@ STIOAuthProvider - Userinfo Request - Tokens Recebidos
 ${JSON.stringify(tokens, null, 2)}
 `);
 
-        if (!process.env.STI_USERINFO_URL) {
-          throw new Error('STI_USERINFO_URL environment variable is missing.');
+        if (!process.env.UFRN_USERINFO_URL) {
+          throw new Error('UFRN_USERINFO_URL environment variable is missing.');
         }
-        if (!process.env.STI_XAPI_KEY) {
-          throw new Error('STI_XAPI_KEY environment variable is missing.');
+        if (!process.env.UFRN_XAPI_KEY) {
+          throw new Error('UFRN_XAPI_KEY environment variable is missing.');
         }
 
-        const userInfoResponse = await fetch(process.env.STI_USERINFO_URL, {
+        const userInfoResponse = await fetch(process.env.UFRN_USERINFO_URL, {
           headers: {
             Authorization: `Bearer ${tokens.access_token}`,
-            'X-API-Key': process.env.STI_XAPI_KEY
+            'X-API-Key': process.env.UFRN_XAPI_KEY
           }
         });
 

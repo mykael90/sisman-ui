@@ -11,6 +11,16 @@ const nextConfig: NextConfig = {
         pathname: '/sigaa/**'
       }
     ]
+  },
+  logging: {
+    fetches: {
+      fullUrl: true,
+      hmrRefreshes: true
+    },
+    incomingRequests: {
+      /* não ignorar requisições, logar todas */
+      ignore: []
+    }
   }
 };
 

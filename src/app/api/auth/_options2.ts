@@ -31,11 +31,11 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string
     }),
     STIOAuthProvider({
-      clientId: process.env.STI_CLIENT_ID as string,
-      clientSecret: process.env.STI_CLIENT_SECRET as string,
-      authorizationUrl: process.env.STI_AUTHORIZATION_URL,
-      tokenUrl: process.env.STI_TOKEN_URL,
-      redirectUri: process.env.STI_REDIRECT_URI
+      clientId: process.env.UFRN_CLIENT_ID as string,
+      clientSecret: process.env.UFRN_CLIENT_SECRET as string,
+      authorizationUrl: process.env.UFRN_AUTH_URL,
+      tokenUrl: process.env.UFRN_TOKEN_URL,
+      redirectUri: process.env.UFRN_REDIRECT_URI
     })
   ],
   pages: {

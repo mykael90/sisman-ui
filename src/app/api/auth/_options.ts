@@ -3,10 +3,12 @@ import { AuthOptions } from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
 import { AdapterUser } from 'next-auth/adapters';
 import { JWT, encode, decode } from 'next-auth/jwt';
-import logger from '@/lib/logger';
+import Logger from '@/lib/logger';
 
 // Importe a lógica de autorização do novo arquivo
 import { handleAuthorizationLogic } from '@/lib/auth/authorization';
+
+const logger = new Logger('authOptions');
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -16,11 +18,11 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string
     }),
     STIOAuthProvider({
-      clientId: process.env.STI_CLIENT_ID as string,
-      clientSecret: process.env.STI_CLIENT_SECRET as string,
-      authorizationUrl: process.env.STI_AUTHORIZATION_URL,
-      tokenUrl: process.env.STI_TOKEN_URL,
-      redirectUri: process.env.STI_REDIRECT_URI
+      clientId: process.env.UFRN_CLIENT_ID as string,
+      clientSecret: process.env.UFRN_CLIENT_SECRET as string,
+      authorizationUrl: process.env.UFRN_AUTH_URL,
+      tokenUrl: process.env.UFRN_TOKEN_URL,
+      redirectUri: process.env.UFRN_REDIRECT_URI
     })
   ],
   pages: {

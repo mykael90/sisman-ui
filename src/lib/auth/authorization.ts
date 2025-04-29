@@ -2,6 +2,9 @@
 import { SignJWT, jwtVerify } from 'jose';
 import type { JWT } from 'next-auth/jwt';
 import type { AdapterUser } from 'next-auth/adapters';
+import Logger from '@/lib/logger';
+
+const logger = new Logger('authorization');
 
 // Interface para os dados do usuário que serão incluídos no token de requisição
 interface AuthorizationRequestUserData {
@@ -21,10 +24,12 @@ async function createAuthorizationRequestToken(
   userData: AuthorizationRequestUserData
 ): Promise<string> {
   if (!process.env.AUTHORIZATION_JWT_SECRET) {
-    console.error('AUTHORIZATION_JWT_SECRET environment variable is missing.');
+    logger.error('AUTHORIZATION_JWT_SECRET environment variable is missing.');
     throw new Error('AUTHORIZATION_JWT_SECRET is not defined');
   }
   const secret = new TextEncoder().encode(process.env.AUTHORIZATION_JWT_SECRET);
+  logger.debug(`Authorization JWT Secret: ${process.env.AUTHORIZATION_JWT_SECRET}`);
+
   const alg = 'HS256';
 
   // Inclui email, login e name no payload
@@ -34,7 +39,7 @@ async function createAuthorizationRequestToken(
     name: userData.name
   };
 
-  console.log('$$ Creating authorization request token with payload:', payload); // Log para depuração
+  logger.info('Creating authorization request token with payload:', payload); // Log para depuração
 
   const token = await new SignJWT(payload)
     .setProtectedHeader({ alg })
@@ -43,7 +48,7 @@ async function createAuthorizationRequestToken(
     .setExpirationTime('5m')
     .sign(secret);
 
-  console.log(`$$ Authorization request token created: ${token}`);
+  logger.info(`Authorization request token created: ${token}`);
 
   return token;
 }
@@ -57,7 +62,7 @@ async function fetchAuthorizationApiToken(
   const apiKey = process.env.AUTHORIZATION_API_KEY;
 
   if (!apiUrl) {
-    console.error('AUTHORIZATION_API_URL environment variable is missing.');
+    logger.error('AUTHORIZATION_API_URL environment variable is missing.');
     return null;
   }
 
@@ -73,17 +78,18 @@ async function fetchAuthorizationApiToken(
     });
 
     if (!response.ok) {
-      console.error(
-        `Authorization API request failed with status ${response.status}: ${await response.text()}`
+      logger.error(
+        `Authorization API request failed with status ${response.status}: ${await response.text()}`,
+        { status: response.status }
       );
       return null;
     }
 
     const data: AuthorizationApiResponse = await response.json();
-    console.log('$$ Successfully fetched authorization token from custom API');
+    logger.info('Successfully fetched authorization token from custom API');
     return data;
   } catch (error) {
-    console.error('Error fetching authorization token:', error);
+    logger.error('Error fetching authorization token:', error);
     return null;
   }
 }
@@ -100,9 +106,9 @@ export async function handleAuthorizationLogic(
 
   // Verifica se temos os dados necessários do usuário e a secret
   if (user?.email && process.env.AUTHORIZATION_JWT_SECRET) {
-    console.log(
-      `$$ Fetching authorization token for user: email=${user.email}, login=${user.login}, name=${user.name}`
-    );
+    logger.info(
+      `Fetching authorization token for user: email=${user.email}, login=${user.login}, name=${user.name}`
+    , { user });
     try {
       // Prepara os dados do usuário para o token de requisição
       const userDataForToken: AuthorizationRequestUserData = {
@@ -119,21 +125,20 @@ export async function handleAuthorizationLogic(
       if (authorizationData) {
         fieldsToAdd.apiAccessToken = authorizationData.accessToken;
         fieldsToAdd.roles = authorizationData.roles;
-        console.log('$$ Authorization data obtained:', {
+        logger.info('Authorization data obtained:', {
           apiAccessToken: !!authorizationData.accessToken,
           roles: authorizationData.roles
         });
       } else {
         fieldsToAdd.authorizationError = 'Failed to fetch authorization token';
-        console.warn(
-          '$$ Failed to fetch authorization token for user:',
+        logger.warn(
+          'Failed to fetch authorization token for user:',
           user.email
         );
       }
     } catch (error) {
-      fieldsToAdd.authorizationError =
-        'Error during authorization token creation/fetch';
-      console.error('$$ Error in authorization logic:', error);
+      fieldsToAdd.authorizationError = 'Error during authorization token creation/fetch';
+      logger.error('Error in authorization logic:', error);
     }
   } else if (!user?.email) {
     fieldsToAdd.authorizationError = 'User email missing';
@@ -143,7 +148,7 @@ export async function handleAuthorizationLogic(
   } else {
     // A verificação do AUTHORIZATION_JWT_SECRET já acontece dentro de createAuthorizationRequestToken
     // mas podemos manter um log aqui se quisermos
-    console.warn(
+    logger.warn(
       '$$ AUTHORIZATION_JWT_SECRET missing, cannot create request token.'
     );
     fieldsToAdd.authorizationError = 'Authorization JWT Secret missing';
@@ -162,7 +167,7 @@ export async function verifyAuthorizationToken(token: string): Promise<any> {
     const { payload } = await jwtVerify(token, secret);
     return payload;
   } catch (error) {
-    console.error('Failed to verify authorization token:', error);
+    logger.error('Failed to verify authorization token:', error);
     return null; // Ou lançar o erro, dependendo de como você quer lidar com a falha
   }
 }

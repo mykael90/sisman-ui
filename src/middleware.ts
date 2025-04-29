@@ -1,11 +1,24 @@
 // src/middleware.ts
 import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
+import Logger from '@/lib/logger';
+
+const logger = new Logger('Middleware');
 
 export default withAuth(
   // `withAuth` aprimora sua Request com o token do usuário.
   // Você pode fazer verificações de papéis (roles) aqui se necessário.
   function middleware(req) {
+    const { method, url } = req;
+    const start = Date.now();
+
+    // Loga o início da requisição
+    logger.info(
+      // Usando info em vez de warn para um log normal
+      `Request START: ${method} ${req.nextUrl.pathname}`,
+      { req: { method, url } } // Passando objeto como segundo argumento
+    );
+
     // Exemplo: Redirecionar se não for admin e tentar acessar /admin
     // if (
     //   req.nextUrl.pathname.startsWith('/admin') &&
@@ -16,8 +29,18 @@ export default withAuth(
     // Se nenhuma lógica extra for necessária aqui (além da autenticação padrão),
     // você pode simplesmente retornar null ou não ter esta função.
     // O `withAuth` já protege as rotas no `matcher` por padrão.
-    console.log('Token no middleware:', req.nextauth.token); // Útil para depurar papéis/claims
-    return NextResponse.next(); // Continua o fluxo normal se autenticado
+
+    logger.warn('Token no middleware:', req.nextauth.token); // Útil para depurar papéis/claims
+    const response = NextResponse.next(); // Continua o fluxo normal se autenticado
+
+    // Exemplo de como usar 'start' para logar a duração
+    const duration = Date.now() - start;
+    logger.info(
+      `Middleware END: ${method} ${req.nextUrl.pathname} in ${duration}ms`,
+      { req: { method, url }, duration } // Passando objeto como segundo argumento
+    );
+
+    return response;
   },
   {
     callbacks: {
