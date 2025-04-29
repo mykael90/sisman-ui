@@ -18,12 +18,17 @@ import { usePathname } from 'next/navigation'; // Import for getting current rou
 import getFirstAndLastName from '../../lib/getFirstAndLastName';
 import getNameFromLogin from '../../lib/getNameFromLogin';
 import handleManualSignOut from '../../lib/auth/signout-ufrn';
+import { useEffect, useState } from 'react';
+import SignInButtonSkeleton from '../skeletons/button-signin-skeleton';
 
 const SignInButton = () => {
   const { data: session } = useSession();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const userIsInSigninPage: boolean = usePathname().startsWith('/signin');
 
+  if (!mounted) return <SignInButtonSkeleton></SignInButtonSkeleton>;
   return (
     <>
       {session ? (

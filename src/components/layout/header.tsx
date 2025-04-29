@@ -8,7 +8,7 @@ import Image from 'next/image';
 import logo from '@/assets/img/logo.svg';
 import logo_dark from '@/assets/img/logo-dark.svg';
 // Importe o useState e o ícone X (fechar)
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { Menu, Search, Bell, X } from 'lucide-react'; // Adicione X
 import ThemeToggle from '../../theme/theme-toogle';
 import ButtonNavBar from '../ui/button-navbar';
@@ -113,7 +113,9 @@ const Header: React.FC = () => {
               <Bell className='text-sisman-blue/70 h-6 w-6 dark:text-gray-200' />
             </ButtonNavBar>
             <ThemeToggle />
-            <SiginButton />
+            <Suspense fallback={<div className='text-center'>Loading...</div>}>
+              <SiginButton />
+            </Suspense>
           </div>
         </div>
       </div>
