@@ -37,7 +37,10 @@ class Logger {
   private log(level: LogLevel, message: string, ...args: any[]) {
     const color = logColors[level];
     const prefix = logPrefixes[level];
-    const timestamp = new Date().toISOString();
+    const timestamp = new Date().toLocaleString('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
+      hourCycle: 'h24'
+    });
     // Usa this.context para obter o contexto da instância
     console.log(
       color(`${prefix} [${timestamp}] [${level}] [${this.context}] ${message}`),

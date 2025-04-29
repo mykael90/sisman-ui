@@ -85,12 +85,16 @@ Account: ${JSON.stringify(account, null, 2)}
 Profile: ${JSON.stringify(profile, null, 2)}
 `);
 
+      //TODO: Dividir esse código, ficou muito grande. Fazer revalidação para o token que acessa a API do SISMAN. Só foi feita a revalidação para o da UFRN.
+
       // Durante o login inicial (quando account e user estão presentes)
       if (account && user) {
+        logger.info(`Primeiro acesso, obtendo informações básicas do provedor`);
         // Preenche informações básicas do provedor
         token.id = user.id;
-        token.accessToken = account.access_token; // Token do provedor (STI)
-        token.refreshToken = account.refresh_token; // Refresh token do provedor (STI)
+        token.accessToken = account.access_token; // Token do provedor (UFRN)
+        token.refreshToken = account.refresh_token; // Refresh token do provedor (UFRN)
+        token.expiresAt = account.expires_at; // Expiração do token do provedor (UFRN)
         token.provider = account.provider;
         token.login = user.login; // Adiciona o login, se existir
 
@@ -99,6 +103,52 @@ Profile: ${JSON.stringify(profile, null, 2)}
         // Mescla os campos retornados pela lógica de autorização no token principal
         token = { ...token, ...authorizationFields };
         // ----- FIM DA LÓGICA DE AUTORIZAÇÃO DELEGADA -----
+      } else if (Date.now() < Number(token.expiresAt) * 1000) {
+        // Subsequent logins, but the `access_token` is still valid
+        //não precisa fazer nada
+        logger.info(`Token UFRN ainda válido, sem necessidade de renovação`);
+      } else {
+        // Subsequent logins, but the `access_token` has expired, try to refresh it
+        logger.warn(`Token UFRN expirado, tentativa de renovação`);
+        if (!token.refreshToken) throw new TypeError('Missing refresh_token');
+
+        try {
+          // The `token_endpoint` can be found in the provider's documentation. Or if they support OIDC,
+          const response = await fetch(process.env.UFRN_TOKEN_URL as string, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+              client_id: process.env.UFRN_CLIENT_ID as string,
+              client_secret: process.env.UFRN_CLIENT_SECRET as string,
+              grant_type: 'refresh_token',
+              refresh_token: token.refreshToken as string
+            })
+          });
+          const tokensOrError = await response.json();
+
+          if (!response.ok) throw tokensOrError;
+
+          const newToken = tokensOrError as {
+            access_token: string;
+            expires_in: number;
+            refresh_token?: string;
+          };
+
+          token = {
+            ...token,
+            accessToken: newToken.access_token,
+            refreshToken: newToken.refresh_token
+              ? newToken.refresh_token
+              : token.refreshToken,
+            expiresAt: Math.floor(Date.now() / 1000 + newToken.expires_in)
+          };
+
+          logger.info(`Token UFRN renovado com sucesso`);
+        } catch (error) {
+          console.error('Error refreshing access_token', error);
+          // If we fail to refresh the token, return an error so we can handle it on the page
+          token.error = 'RefreshTokenError';
+        }
       }
 
       logger.debug(`
