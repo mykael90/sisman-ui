@@ -42,9 +42,12 @@ export const config = {
      * - _next/static (Arquivos estáticos)
      * - _next/image (Arquivos de otimização de imagem)
      * - favicon.ico (Arquivo de favicon)
-     * - signin (Sua página de login) - IMPORTANTE!
-     * - Você pode adicionar outras rotas públicas aqui (ex: /public/*, /register)
+     * - signin (Sua página de login)
+     * E que terminam com extensões comuns de assets (adicione mais se necessário)
+     * OU caminhos específicos como /images, /fonts etc.
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|signin).*)'
+    '/((?!api|_next/static|_next/image|favicon\\.ico|signin|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
+    // Alternativa se seus assets estiverem em pastas específicas:
+    // '/((?!api|_next/static|_next/image|favicon.ico|signin|images/|icons/).*)',
   ]
 };

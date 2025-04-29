@@ -3,6 +3,7 @@ import { AuthOptions } from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
 import { AdapterUser } from 'next-auth/adapters';
 import { JWT, encode, decode } from 'next-auth/jwt';
+import logger from '@/lib/logger';
 
 // Importe a lógica de autorização do novo arquivo
 import { handleAuthorizationLogic } from '@/lib/auth/authorization';
@@ -30,8 +31,8 @@ export const authOptions: AuthOptions = {
     maxAge: 30 * 24 * 60 * 60 // 30 days
   },
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      console.log(`
+    async signIn({ user, account, profile }) {
+      logger.debug(`
 --------------------------------------------------
 signIn Callback - Dados Recebidos
 --------------------------------------------------
@@ -47,8 +48,14 @@ Profile: ${JSON.stringify(profile, null, 2)}
       return true;
     },
     async redirect({ url, baseUrl }) {
-      console.log(`
-redirect Callback - URL: ${url}, Base URL: ${baseUrl}
+      logger.debug(`
+--------------------------------------------------
+signIn Callback - Dados Recebidos
+--------------------------------------------------
+
+URL: ${JSON.stringify(url, null, 2)}
+
+Base URL: ${JSON.stringify(baseUrl, null, 2)}
 `);
       if (url.startsWith('/')) return `${baseUrl}${url}`;
       else if (new URL(url).origin === baseUrl) return url;
@@ -65,7 +72,7 @@ redirect Callback - URL: ${url}, Base URL: ${baseUrl}
       account?: any;
       profile?: any;
     }): Promise<JWT> {
-      console.log(`
+      logger.debug(`
 --------------------------------------------------
 JWT Callback - Dados Recebidos (Antes do Processamento)
 --------------------------------------------------
@@ -92,7 +99,7 @@ Profile: ${JSON.stringify(profile, null, 2)}
         // ----- FIM DA LÓGICA DE AUTORIZAÇÃO DELEGADA -----
       }
 
-      console.log(`
+      logger.debug(`
 --------------------------------------------------
 JWT Callback - Token Após Processamento
 --------------------------------------------------
@@ -104,7 +111,7 @@ Token: ${JSON.stringify(token, null, 2)}
       return token;
     },
     async session({ session, token, user }) {
-      console.log(`
+      logger.debug(`
 --------------------------------------------------
 Session Callback - Dados Recebidos (Antes do Processamento)
 --------------------------------------------------
@@ -127,7 +134,7 @@ Session: ${JSON.stringify(session, null, 2)}\nToken: ${JSON.stringify(token, nul
       // Removido: Geralmente não se expõe o token do provedor ao cliente
       // session.providerAccessToken = token.accessToken as string;
 
-      console.log(`
+      logger.debug(`
 --------------------------------------------------
 Session Callback - Session Após Processamento
 --------------------------------------------------
@@ -142,19 +149,19 @@ Session: ${JSON.stringify(session, null, 2)}
   jwt: {
     // Suas funções encode/decode personalizadas (ou as padrão se remover)
     encode: async ({ secret, token, maxAge }) => {
-      console.log(`
+      logger.debug(`
 JWT Encode - Payload a ser codificado/criptografado: ${JSON.stringify(token, null, 2)}
 `);
       const encodedToken = await encode({ secret, token, maxAge });
-      console.log(`JWT Encode - Token JWE/JWS gerado: ${encodedToken}`);
+      logger.debug(`JWT Encode - Token JWE/JWS gerado: ${encodedToken}`);
       return encodedToken;
     },
     decode: async ({ secret, token }) => {
-      console.log(
+      logger.debug(
         `JWT Decode - Token JWE/JWS recebido para decodificar: ${token}`
       );
       const decodedPayload = await decode({ secret, token });
-      console.log(
+      logger.debug(
         `JWT Decode - Payload decodificado/descriptografado: ${JSON.stringify(decodedPayload, null, 2)}`
       );
       return decodedPayload;

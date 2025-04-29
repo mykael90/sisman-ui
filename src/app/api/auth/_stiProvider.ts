@@ -1,4 +1,5 @@
 import { OAuthUserConfig, OAuthConfig } from 'next-auth/providers/oauth';
+import logger from '@/lib/logger';
 
 export interface STIProfile {
   sub: string;
@@ -41,7 +42,13 @@ export default function STIOAuthProvider<P extends STIProfile>(
         grant_type: 'authorization_code'
       },
       async request(context) {
-        console.log(`\ncontext: ${JSON.stringify(context)}\n`);
+        logger.info(`
+--------------------------------------------------
+STIOAuthProvider - Token Request - Contexto
+--------------------------------------------------
+
+${JSON.stringify(context, null, 2)}
+`);
         const { provider, params } = context;
         if (!provider.token) {
           throw new Error('Provider token URL is missing.');
@@ -59,12 +66,26 @@ export default function STIOAuthProvider<P extends STIProfile>(
         });
 
         const tokens = await response.json();
+        logger.info(`
+--------------------------------------------------
+STIOAuthProvider - Token Request - Tokens Recebidos
+--------------------------------------------------
+
+${JSON.stringify(tokens, null, 2)}
+`);
         return { tokens };
       }
     },
     userinfo: {
       async request({ tokens }) {
-        console.log(`\n$$1 tokens STI: ${JSON.stringify(tokens)}\n`);
+        logger.info(`
+--------------------------------------------------
+STIOAuthProvider - Userinfo Request - Tokens Recebidos
+--------------------------------------------------
+
+${JSON.stringify(tokens, null, 2)}
+`);
+
         if (!process.env.STI_USERINFO_URL) {
           throw new Error('STI_USERINFO_URL environment variable is missing.');
         }
@@ -81,7 +102,13 @@ export default function STIOAuthProvider<P extends STIProfile>(
 
         const userInfo = await userInfoResponse.json();
 
-        console.log(`\n$$2 userInfo STI: ${JSON.stringify(userInfo)}\n`);
+        logger.info(`
+--------------------------------------------------
+STIOAuthProvider - Userinfo Request - UserInfo Recebido
+--------------------------------------------------
+
+${JSON.stringify(userInfo, null, 2)}
+`);
 
         return {
           sub: userInfo['id-usuario'],
@@ -93,8 +120,18 @@ export default function STIOAuthProvider<P extends STIProfile>(
       }
     },
     profile(profile, tokens) {
-      console.log(`\n$$3 profile STI: ${JSON.stringify(profile)}\n`);
-      console.log(`\n$$4 tokens STI: ${JSON.stringify(tokens)}\n`);
+      logger.info(`
+--------------------------------------------------
+STIOAuthProvider - Profile - Profile Recebido
+--------------------------------------------------
+
+${JSON.stringify(profile, null, 2)}
+`);
+      logger.info(`
+--------------------------------------------------
+STIOAuthProvider - Profile - Tokens Recebidos
+--------------------------------------------------
+${JSON.stringify(tokens, null, 2)}`);
 
       type Decoded = {
         sub: string;
@@ -117,7 +154,13 @@ export default function STIOAuthProvider<P extends STIProfile>(
           Buffer.from(tokens.id_token.split('.')[1], 'base64').toString()
         );
       } else {
-        console.log(`\n$$5 ID Token não encontrado: ${tokens.id_token}\n`);
+        logger.warn(`
+--------------------------------------------------
+STIOAuthProvider - Profile - ID Token Não Encontrado
+--------------------------------------------------
+
+ID Token: ${tokens.id_token}
+`);
         // Use the sub from the userinfo response (profile)
         decoded = {
           sub: profile.sub,
