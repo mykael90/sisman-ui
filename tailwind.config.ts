@@ -8,6 +8,14 @@ const config: Config = {
   ],
   darkMode: 'class',
   theme: {
+    extend: {
+      fontFamily: {
+        noto: ['var(--font-noto-sans)'],
+        notoMono: ['var(--font-noto-sans-mono)'],
+        geist: ['var(--font-geist-ser)'],
+        geistMono: ['var(--font-geist-mono)']
+      }
+    },
     container: {
       center: true,
       padding: {
