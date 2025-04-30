@@ -6,37 +6,7 @@ import { UserTable } from './user-table';
 import { UserPagination } from './user-pagination';
 import { useState } from 'react';
 import type { User } from '@/types/user';
-
-// Dados de exemplo
-const initialUsers: User[] = [
-  {
-    id: '1',
-    name: 'Sarah Connor',
-    username: 'sconnor',
-    email: 'sarah.connor@example.com',
-    role: 'Admin',
-    status: 'Active',
-    avatar: '/placeholder.svg?height=40&width=40'
-  },
-  {
-    id: '2',
-    name: 'John Smith',
-    username: 'jsmith',
-    email: 'john.smith@example.com',
-    role: 'Editor',
-    status: 'Active',
-    avatar: '/placeholder.svg?height=40&width=40'
-  },
-  {
-    id: '3',
-    name: 'Emma Wilson',
-    username: 'ewilson',
-    email: 'emma.wilson@example.com',
-    role: 'Viewer',
-    status: 'Inactive',
-    avatar: '/placeholder.svg?height=40&width=40'
-  }
-];
+import initialUsers from './user-data-example';
 
 export function UserManagementPage() {
   const [users, setUsers] = useState<User[]>(initialUsers);

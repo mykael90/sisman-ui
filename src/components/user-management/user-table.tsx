@@ -1,6 +1,13 @@
 'use client';
 
 import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable
+} from '@tanstack/react-table';
+
+import {
   Table,
   TableBody,
   TableCell,
@@ -19,67 +26,7 @@ interface UserTableProps {
   onDelete: (userId: string) => void;
 }
 
-export function UserTable({ users, onEdit, onDelete }: UserTableProps) {
-  return (
-    <div className='border-md rounded-md'>
-      <Table>
-        <TableHeader className='bg-gray-100'>
-          <TableRow>
-            <TableHead>User</TableHead>
-            <TableHead>Username</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody className='bg-white'>
-          {users.map(user => (
-            <TableRow key={user.id}>
-              <TableCell className='flex items-center gap-2'>
-                <Avatar>
-                  <AvatarImage
-                    src={user.avatar || '/placeholder.svg'}
-                    alt={user.name}
-                  />
-                  <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <span>{user.name}</span>
-              </TableCell>
-              <TableCell>{user.username}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>
-                <RoleBadge role={user.role} />
-              </TableCell>
-              <TableCell>
-                <StatusBadge status={user.status} />
-              </TableCell>
-              <TableCell>
-                <div className='flex gap-2'>
-                  <Button
-                    variant='ghost'
-                    size='icon'
-                    onClick={() => onEdit(user.id)}
-                  >
-                    <Edit className='h-4 w-4' />
-                  </Button>
-                  <Button
-                    variant='ghost'
-                    size='icon'
-                    onClick={() => onDelete(user.id)}
-                  >
-                    <Trash2 className='h-4 w-4 text-red-500' />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  );
-}
-
+// Componentes auxiliares para Badges (mantidos do original)
 function RoleBadge({ role }: { role: string }) {
   const getColorByRole = () => {
     switch (role) {
@@ -114,5 +61,120 @@ function StatusBadge({ status }: { status: string }) {
     >
       {status}
     </span>
+  );
+}
+
+// 1. Definir as colunas com createColumnHelper
+const columnHelper = createColumnHelper<User>();
+
+const columns = (
+  onEdit: (userId: string) => void,
+  onDelete: (userId: string) => void
+) => [
+  columnHelper.accessor('name', {
+    header: 'User',
+    cell: info => (
+      // Mantém a estrutura original da célula User com Avatar
+      <div className='flex items-center gap-2'>
+        <Avatar className='h-12 w-12'>
+          <AvatarImage
+            src={info.row.original.avatar || '/placeholder.svg'}
+            alt={info.getValue()}
+          />
+          <AvatarFallback>{info.getValue().charAt(0)}</AvatarFallback>
+        </Avatar>
+        <span>{info.getValue()}</span>
+      </div>
+    )
+  }),
+  columnHelper.accessor('username', {
+    header: 'Username',
+    cell: info => info.getValue()
+  }),
+  columnHelper.accessor('email', {
+    header: 'Email',
+    cell: info => info.getValue()
+  }),
+  columnHelper.accessor('role', {
+    header: 'Role',
+    cell: info => <RoleBadge role={info.getValue()} /> // Usa o componente RoleBadge
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    cell: info => <StatusBadge status={info.getValue()} /> // Usa o componente StatusBadge
+  }),
+  columnHelper.display({
+    id: 'actions',
+    header: 'Actions',
+    cell: ({ row }) => (
+      // Mantém a estrutura original da célula Actions com botões
+      <div className='flex gap-2'>
+        <Button
+          variant='ghost'
+          size='icon'
+          onClick={() => onEdit(row.original.id)}
+        >
+          <Edit className='h-4 w-4' />
+        </Button>
+        <Button
+          variant='ghost'
+          size='icon'
+          onClick={() => onDelete(row.original.id)}
+        >
+          <Trash2 className='h-4 w-4 text-red-500' />
+        </Button>
+      </div>
+    )
+  })
+];
+
+export function UserTable({ users, onEdit, onDelete }: UserTableProps) {
+  // 2. Instanciar a tabela com useReactTable
+  const table = useReactTable({
+    data: users,
+    columns: columns(onEdit, onDelete), // Passa os callbacks para a definição das colunas
+    getCoreRowModel: getCoreRowModel()
+  });
+
+  return (
+    <div className='border-md rounded-md'>
+      <Table>
+        <TableHeader className='bg-gray-100'>
+          {/* 3. Renderizar cabeçalhos usando table.getHeaderGroups */}
+          {table.getHeaderGroups().map(headerGroup => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map(header => (
+                <TableHead key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody className='bg-white'>
+          {/* 4. Renderizar linhas e células usando table.getRowModel e flexRender */}
+          {table.getRowModel().rows.map(row => (
+            <TableRow key={row.id}>
+              {row.getVisibleCells().map(cell => (
+                // Aplica a classe específica apenas na célula 'name' para manter o layout do Avatar
+                <TableCell
+                  key={cell.id}
+                  className={
+                    cell.column.id === 'name' ? 'flex items-center gap-2' : ''
+                  }
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
