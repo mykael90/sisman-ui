@@ -7,7 +7,7 @@ const logger = new Logger('refreshUfrnAccessToken');
 
 export default async function refreshUfrnAccessToken(token: JWT): Promise<JWT> {
   logger.warn(`Token UFRN expirado, tentativa de renovação`);
-  if (!token.refreshToken) {
+  if (!token.refreshTokenUfrn) {
     logger.error('Missing refresh_token for UFRN');
     return { ...token, error: 'MissingRefreshTokenError' }; // Retorna erro específico
   }
@@ -20,7 +20,7 @@ export default async function refreshUfrnAccessToken(token: JWT): Promise<JWT> {
         client_id: process.env.UFRN_CLIENT_ID as string,
         client_secret: process.env.UFRN_CLIENT_SECRET as string,
         grant_type: 'refresh_token',
-        refresh_token: token.refreshToken as string
+        refresh_token: token.refreshTokenUfrn as string
       })
     });
 
@@ -40,9 +40,9 @@ export default async function refreshUfrnAccessToken(token: JWT): Promise<JWT> {
     logger.info(`Token UFRN renovado com sucesso`);
     return {
       ...token,
-      accessToken: newToken.access_token,
-      refreshToken: newToken.refresh_token ?? token.refreshToken, // Atualiza se um novo for fornecido
-      expiresAt: Math.floor(Date.now() / 1000 + newToken.expires_in),
+      accessTokenUfrn: newToken.access_token,
+      refreshTokenUfrn: newToken.refresh_token ?? token.refreshTokenUfrn, // Atualiza se um novo for fornecido
+      expiresAtUfrn: Math.floor(Date.now() / 1000 + newToken.expires_in),
       error: undefined // Limpa qualquer erro anterior
     };
   } catch (error) {

@@ -45,7 +45,7 @@ export function UserManagementPage() {
     <div className='container mx-auto p-4'>
       <UserManagementHeader onAddUser={handleAddUser} />
 
-      <div className='mt-4 mb-4 h-16 rounded-t-md border-0 bg-white px-4 py-3.5'>
+      <div className='mt-4 mb-4 h-16 rounded-xl border-0 bg-white px-4 py-3.5'>
         <UserFilters
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}

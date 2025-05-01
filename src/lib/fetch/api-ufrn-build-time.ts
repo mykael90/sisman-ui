@@ -5,6 +5,9 @@ interface TokenResponse {
   scope: string;
 }
 
+import Logger from '@/lib/logger';
+
+const logger = new Logger('ApiUFRNBuildTime');
 interface TokenResponse {
   access_token: string;
   expires_in: number;
@@ -27,7 +30,7 @@ async function authenticate(
   const tokenUrl = process.env.UFRN_TOKEN_URL;
 
   if (!clientId || !clientSecret || !tokenUrl) {
-    console.error(
+    logger.error(
       'Missing UFRN authentication environment variables (UFRN_CLIENT_ID, UFRN_CLIENT_SECRET, UFRN_TOKEN_URL)'
     );
     throw new Error(
@@ -41,7 +44,7 @@ async function authenticate(
   formData.append('grant_type', 'client_credentials');
 
   try {
-    console.log(`Attempting authentication with cache mode: ${cache}`);
+    logger.info(`Attempting authentication with cache mode: ${cache}`);
     const response = await fetch(tokenUrl, {
       method: 'POST',
       headers: {
@@ -54,7 +57,7 @@ async function authenticate(
     if (!response.ok) {
       // Log more details about the failed response
       const errorBody = await response.text();
-      console.error(
+      logger.error(
         `Authentication failed with status: ${response.status} ${response.statusText}. Response body: ${errorBody}`
       );
       throw new Error(
@@ -63,10 +66,10 @@ async function authenticate(
     }
 
     const data: TokenResponse = await response.json();
-    console.log('Authentication successful:', data);
+    logger.info('Authentication successful:', data); // Consider removing sensitive data logging in production
     return data;
   } catch (error) {
-    console.error('Error during authentication request:', error);
+    logger.error('Error during authentication request:', error);
     // Re-throw a more specific error or handle it as needed
     throw new Error(`Erro ao tentar autenticar: ${error.message}`);
   }
@@ -91,13 +94,13 @@ export default async function fetchApiUFRNBuildTime(
 ): Promise<Response> {
   const apiKey = process.env.UFRN_XAPI_KEY;
   if (!apiKey) {
-    console.error('Missing UFRN_XAPI_KEY environment variable.');
+    logger.error('Missing UFRN_XAPI_KEY environment variable.');
     throw new Error('Configuração da API incompleta. Chave X-API-Key ausente.');
   }
 
   try {
     // First attempt using potentially cached credentials
-    console.log('Fetching UFRN API data (initial attempt)...');
+    logger.info('Fetching UFRN API data (initial attempt)...');
     const credentials = await authenticate(); // Uses default cache
 
     const headers = {
@@ -112,7 +115,7 @@ export default async function fetchApiUFRNBuildTime(
     // Check if the first attempt failed specifically due to authorization (e.g., 401 Unauthorized)
     // Adjust the status code check based on your API's specific response for expired/invalid tokens
     if (!response.ok && response.status === 401) {
-      console.warn(
+      logger.warn(
         'Initial fetch failed with 401, possibly due to expired credentials. Retrying without cache...'
       );
       // Throw an error to trigger the catch block for re-authentication
@@ -120,7 +123,7 @@ export default async function fetchApiUFRNBuildTime(
     } else if (!response.ok) {
       // Handle other non-OK responses
       const errorBody = await response.text();
-      console.error(
+      logger.error(
         `Initial fetch failed with status: ${response.status} ${response.statusText}. URL: ${url}. Response body: ${errorBody}`
       );
       throw new Error(
@@ -128,10 +131,10 @@ export default async function fetchApiUFRNBuildTime(
       );
     }
 
-    console.log('Initial fetch successful.');
+    logger.info('Initial fetch successful.');
     return response; // Return the successful response from the first attempt
   } catch (error) {
-    console.error(
+    logger.error(
       'Error during initial fetch or authentication:',
       error.message
     );
@@ -143,7 +146,7 @@ export default async function fetchApiUFRNBuildTime(
       error.message.includes('autenticação')
     ) {
       try {
-        console.log('Retrying authentication without cache...');
+        logger.info('Retrying authentication without cache...');
         const freshCredentials = await authenticate('no-cache'); // Force re-authentication
 
         const freshHeaders = {
@@ -153,7 +156,7 @@ export default async function fetchApiUFRNBuildTime(
           'Content-Type': 'application/json'
         };
 
-        console.log('Retrying fetch with fresh credentials...');
+        logger.info('Retrying fetch with fresh credentials...');
         const retryResponse = await fetch(url, {
           ...options,
           headers: freshHeaders
@@ -161,7 +164,7 @@ export default async function fetchApiUFRNBuildTime(
 
         if (!retryResponse.ok) {
           const retryErrorBody = await retryResponse.text();
-          console.error(
+          logger.error(
             `Retry fetch failed with status: ${retryResponse.status} ${retryResponse.statusText}. URL: ${url}. Response body: ${retryErrorBody}`
           );
           throw new Error(
@@ -169,10 +172,10 @@ export default async function fetchApiUFRNBuildTime(
           );
         }
 
-        console.log('Retry fetch successful.');
+        logger.info('Retry fetch successful.');
         return retryResponse; // Return the successful response from the retry
       } catch (retryError) {
-        console.error(
+        logger.error(
           'Error during retry fetch or re-authentication:',
           retryError
         );

@@ -12,6 +12,8 @@ declare module 'next-auth' {
       login?: string | null;
     } & DefaultSession['user']; // Mantém os campos padrão como name, email, image
     provider?: string;
+    accessTokenUfrn?: string; // Token do provedor (ex: UFRN)
+    refreshTokenUfrn?: string; // Refresh token do provedor
     accessTokenSisman?: string | null;
     roles?: string[];
     authorizationError?: string;
@@ -35,9 +37,9 @@ declare module 'next-auth/jwt' {
     id?: string; // Ou o tipo correto
     login?: string | null;
     provider?: string;
-    accessToken?: string; // Token do provedor (ex: UFRN)
-    refreshToken?: string; // Refresh token do provedor
-    expiresAt?: number; // Timestamp de expiração do token do provedor
+    accessTokenUfrn?: string; // Token do provedor (ex: UFRN)
+    refreshTokenUfrn?: string; // Refresh token do provedor
+    expiresAtUfrn?: number; // Timestamp de expiração do token do provedor
     accessTokenSisman?: string | null; // Token da sua API
     roles?: string[];
     authorizationError?: string;

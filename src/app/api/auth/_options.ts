@@ -90,9 +90,9 @@ Profile: ${JSON.stringify(profile, null, 2)}
         processedToken = {
           ...processedToken,
           id: user.id,
-          accessToken: account.access_token, // Token do provedor (UFRN)
-          refreshToken: account.refresh_token, // Refresh token do provedor (UFRN)
-          expiresAt: account.expires_at, // Expiração do token do provedor (UFRN)
+          accessTokenUfrn: account.access_token, // Token do provedor (UFRN)
+          refreshTokenUfrn: account.refresh_token, // Refresh token do provedor (UFRN)
+          expiresAtUfrn: account.expires_at, // Expiração do token do provedor (UFRN)
           provider: account.provider,
           login: user.login // Adiciona o login, se existir
         };
@@ -103,7 +103,7 @@ Profile: ${JSON.stringify(profile, null, 2)}
       }
       // 2. Validação/Renovação do Token UFRN (se aplicável e expirado)
       // Verifica se é uma chamada subsequente e se o token UFRN está expirado
-      else if (Date.now() >= Number(processedToken.expiresAt) * 1000) {
+      else if (Date.now() >= Number(processedToken.expiresAtUfrn) * 1000) {
         processedToken = await refreshUfrnAccessToken(processedToken);
       }
       // 3. Validação/Renovação do Token SISMAN (TODO)
@@ -140,7 +140,11 @@ Token: ${JSON.stringify(token, null, 2)}
       session.user.login = token.login as string | undefined;
       session.provider = token.provider as string | undefined;
 
-      // Expõe dados da API de autorização
+      // Expõe dados da API de autenticação - UFRN
+      session.accessTokenUfrn = token.accessTokenUfrn as string | null;
+      session.refreshTokenUfrn = token.refreshTokenUfrn as string | null;
+
+      // Expõe dados da API de autorização - SISMAN
       session.accessTokenSisman = token.accessTokenSisman as string | null;
       session.roles = token.roles as string[] | undefined;
       session.authorizationError = token.authorizationError as
