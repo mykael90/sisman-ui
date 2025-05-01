@@ -1,6 +1,6 @@
 // export const dynamic = 'force-dynamic';
 
-import fetchStiBuildTime from '../../../lib/api-sti-build-time';
+import fetchApiUFRNBuildTime from '../../../lib/api-ufrn-build-time';
 
 interface sistemaInterface {
   ['id-sistema']: number;
@@ -11,7 +11,7 @@ interface sistemaInterface {
 }
 
 async function getSistemas(): Promise<sistemaInterface[]> {
-  const response = await fetchStiBuildTime(
+  const response = await fetchApiUFRNBuildTime(
     `${process.env.UFRN_API_URL}/comum/v1/sistemas`,
     {
       // cache: 'no-store'

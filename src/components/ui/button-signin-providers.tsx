@@ -20,7 +20,7 @@ const StiSiginButton = ({ callback: callbackUrl }: { callback: string }) => {
       <Button
         className='flex h-12 w-full cursor-pointer gap-3 text-white sm:justify-center'
         size='default'
-        onClick={() => signIn('sti', { callbackUrl })}
+        onClick={() => signIn('ufrn', { callbackUrl })}
       >
         <div className='w-15'>
           <Image
@@ -53,7 +53,7 @@ const StiSiginButton = ({ callback: callbackUrl }: { callback: string }) => {
             className={classNameButtonOthers} // Reutiliza a classe definida
             variant='outline'
             size='default'
-            onClick={() => signIn('sti', { callbackUrl })} // Atenção: O provider 'sti' está sendo usado para GOV.BR também. Verifique se isso está correto.
+            onClick={() => signIn('ufrn', { callbackUrl })} // Atenção: O provider 'ufrn' está sendo usado para GOV.BR também. Verifique se isso está correto.
           >
             <div className='w-15'>
               <Image
@@ -70,7 +70,7 @@ const StiSiginButton = ({ callback: callbackUrl }: { callback: string }) => {
             className={classNameButtonOthers} // Reutiliza a classe definida
             variant='outline'
             size='default'
-            onClick={() => signIn('sti', { callbackUrl })} // Atenção: O provider 'sti' está sendo usado para GOV.BR também. Verifique se isso está correto.
+            onClick={() => signIn('ufrn', { callbackUrl })} // Atenção: O provider 'ufrn' está sendo usado para GOV.BR também. Verifique se isso está correto.
           >
             <div className='w-15'>
               <Image

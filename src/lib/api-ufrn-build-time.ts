@@ -73,7 +73,7 @@ async function authenticate(
 }
 
 /**
- * Fetches data from the STI API using build-time credentials.
+ * Fetches data from the UFRN API using build-time credentials.
  * Handles potential credential expiration by attempting re-authentication without cache.
  *
  * Note: As Next.js might cache the response of this function during build time,
@@ -85,7 +85,7 @@ async function authenticate(
  * @returns A promise that resolves with the fetch Response object.
  * @throws Throws an error if both initial fetch and retry fetch fail.
  */
-export default async function fetchStiBuildTime(
+export default async function fetchApiUFRNBuildTime(
   url: string,
   options: RequestInit = {}
 ): Promise<Response> {
@@ -97,14 +97,14 @@ export default async function fetchStiBuildTime(
 
   try {
     // First attempt using potentially cached credentials
-    console.log('Fetching STI data (initial attempt)...');
+    console.log('Fetching UFRN API data (initial attempt)...');
     const credentials = await authenticate(); // Uses default cache
 
     const headers = {
       ...options.headers,
       Authorization: `Bearer ${credentials.access_token}`,
       'X-API-Key': apiKey,
-      'Content-Type': 'application/json' // Default Content-Type for STI API calls
+      'Content-Type': 'application/json' // Default Content-Type for UFRN API calls
     };
 
     const response = await fetch(url, { ...options, headers });

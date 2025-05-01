@@ -1,4 +1,4 @@
-import STIOAuthProvider from './_stiProvider';
+import UFRNOAuthProvider from './_ufrnProvider';
 import { AuthOptions } from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
 import { AdapterUser } from 'next-auth/adapters';
@@ -15,7 +15,7 @@ export const authOptions: AuthOptions = {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string
     }),
-    STIOAuthProvider({
+    UFRNOAuthProvider({
       clientId: process.env.UFRN_CLIENT_ID as string,
       clientSecret: process.env.UFRN_CLIENT_SECRET as string,
       authorizationUrl: process.env.UFRN_AUTH_URL,

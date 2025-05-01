@@ -1,7 +1,7 @@
 import { OAuthUserConfig, OAuthConfig } from 'next-auth/providers/oauth';
 import Logger from '@/lib/logger';
 
-export interface STIProfile {
+export interface UFRNProfile {
   sub: string;
   name?: string;
   email?: string;
@@ -18,11 +18,11 @@ interface optionsComplement {
 
 const logger = new Logger('stiProvider');
 
-export default function STIOAuthProvider<P extends STIProfile>(
+export default function UFRNOAuthProvider<P extends UFRNProfile>(
   options: OAuthUserConfig<P> & optionsComplement
 ): OAuthConfig<P> {
   return {
-    id: 'sti',
+    id: 'ufrn',
     name: 'STI/UFRN',
     type: 'oauth',
     version: '2.0',
@@ -46,7 +46,7 @@ export default function STIOAuthProvider<P extends STIProfile>(
       async request(context) {
         logger.info(`
 --------------------------------------------------
-STIOAuthProvider - Token Request - Contexto
+UFRNOAuthProvider - Token Request - Contexto
 --------------------------------------------------
 
 ${JSON.stringify(context, null, 2)}
@@ -70,7 +70,7 @@ ${JSON.stringify(context, null, 2)}
         const tokens = await response.json();
         logger.info(`
 --------------------------------------------------
-STIOAuthProvider - Token Request - Tokens Recebidos
+UFRNOAuthProvider - Token Request - Tokens Recebidos
 --------------------------------------------------
 
 ${JSON.stringify(tokens, null, 2)}
@@ -82,7 +82,7 @@ ${JSON.stringify(tokens, null, 2)}
       async request({ tokens }) {
         logger.info(`
 --------------------------------------------------
-STIOAuthProvider - Userinfo Request - Tokens Recebidos
+UFRNOAuthProvider - Userinfo Request - Tokens Recebidos
 --------------------------------------------------
 
 ${JSON.stringify(tokens, null, 2)}
@@ -106,7 +106,7 @@ ${JSON.stringify(tokens, null, 2)}
 
         logger.info(`
 --------------------------------------------------
-STIOAuthProvider - Userinfo Request - UserInfo Recebido
+UFRNOAuthProvider - Userinfo Request - UserInfo Recebido
 --------------------------------------------------
 
 ${JSON.stringify(userInfo, null, 2)}
@@ -124,14 +124,14 @@ ${JSON.stringify(userInfo, null, 2)}
     profile(profile, tokens) {
       logger.info(`
 --------------------------------------------------
-STIOAuthProvider - Profile - Profile Recebido
+UFRNOAuthProvider - Profile - Profile Recebido
 --------------------------------------------------
 
 ${JSON.stringify(profile, null, 2)}
 `);
       logger.info(`
 --------------------------------------------------
-STIOAuthProvider - Profile - Tokens Recebidos
+UFRNOAuthProvider - Profile - Tokens Recebidos
 --------------------------------------------------
 ${JSON.stringify(tokens, null, 2)}`);
 
@@ -158,7 +158,7 @@ ${JSON.stringify(tokens, null, 2)}`);
       } else {
         logger.warn(`
 --------------------------------------------------
-STIOAuthProvider - Profile - ID Token Não Encontrado
+UFRNOAuthProvider - Profile - ID Token Não Encontrado
 --------------------------------------------------
 
 ID Token: ${tokens.id_token}
