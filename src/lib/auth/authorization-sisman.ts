@@ -7,14 +7,14 @@ import Logger from '@/lib/logger';
 const logger = new Logger('authorization');
 
 // Interface para os dados do usuário que serão incluídos no token de requisição
-interface AuthorizationRequestUserData {
+export interface AuthorizationRequestUserData {
   email: string;
   login?: string; // Assumindo que 'login' é o username
   name?: string;
 }
 
 // Interface para a resposta esperada da sua API de autorização
-interface AuthorizationApiResponse {
+export interface AuthorizationApiResponse {
   access_token: string;
   roles?: number[];
   error?: string;
@@ -23,7 +23,7 @@ interface AuthorizationApiResponse {
 }
 
 // Função auxiliar para criar o token JWT temporário para a API de autorização
-async function createAuthorizationRequestToken(
+export async function createAuthorizationRequestToken(
   userData: AuthorizationRequestUserData
 ): Promise<string> {
   if (!process.env.AUTHORIZATION_JWT_SECRET) {
@@ -60,7 +60,7 @@ async function createAuthorizationRequestToken(
 
 // Função auxiliar para buscar o token de autorização na API externa
 // (fetchAuthorizationApiToken permanece igual)
-async function fetchAuthorizationApiToken(
+export async function fetchAuthorizationApiToken(
   requestToken: string
 ): Promise<AuthorizationApiResponse | null> {
   const apiUrl = process.env.AUTHORIZATION_API_URL;
@@ -106,7 +106,8 @@ export async function handleAuthorizationLogic(
   const fieldsToAdd: Partial<JWT> = {
     accessTokenSisman: null,
     roles: [],
-    authorizationError: undefined
+    authorizationError: undefined,
+    expiresAtSisman: undefined
   };
 
   // Verifica se temos os dados necessários do usuário e a secret
@@ -131,8 +132,15 @@ export async function handleAuthorizationLogic(
       if (authorizationData) {
         fieldsToAdd.accessTokenSisman = authorizationData.access_token;
         fieldsToAdd.roles = authorizationData.roles;
+        fieldsToAdd.expiresAtSisman = Math.floor(
+          Date.now() / 1000 + (authorizationData.expires_in || 3600)
+        );
+
         logger.info('Authorization data obtained:', {
           accessTokenSisman: !!authorizationData.access_token,
+          expiresAtSisman: Math.floor(
+            Date.now() / 1000 + (authorizationData.expires_in || 3600)
+          ),
           roles: authorizationData.roles
         });
       } else {

@@ -6,6 +6,7 @@ import { JWT, encode, decode } from 'next-auth/jwt';
 import Logger from '@/lib/logger';
 import { handleAuthorizationLogic } from '@/src/lib/auth/authorization-sisman';
 import refreshUfrnAccessToken from '../../../lib/auth/refresh-ufrn-access-token';
+import refreshSismanAccessToken from '../../../lib/auth/refresh-sisman-access-token';
 
 const logger = new Logger('authOptions');
 
@@ -104,16 +105,23 @@ Profile: ${JSON.stringify(profile, null, 2)}
       // 2. Validação/Renovação do Token UFRN (se aplicável e expirado)
       // Verifica se é uma chamada subsequente e se o token UFRN está expirado
       else if (Date.now() >= Number(processedToken.expiresAtUfrn) * 1000) {
+        logger.warn(
+          'Token UFRN expirado ou inválido, tentando renovar/revalidar...'
+        );
         processedToken = await refreshUfrnAccessToken(processedToken);
       }
       // 3. Validação/Renovação do Token SISMAN (TODO)
-      // else if (processedToken.provider === 'sisman' && /* condição de expiração do token SISMAN expiresAtAuthorization */) {
-      //   logger.info('Token SISMAN expirado ou inválido, tentando renovar/revalidar...');
-      //   // processedToken = await refreshSismanAccessToken(processedToken); // Função a ser criada
-      // }
-      else {
+      else if (Date.now() >= Number(processedToken.expiresAtSisman) * 1000) {
+        /* condição de expiração do token SISMAN expiresAtAuthorization */
+        logger.warn(
+          'Token SISMAN expirado ou inválido, tentando renovar/revalidar...'
+        );
+        processedToken = await refreshSismanAccessToken(processedToken); // Função a ser criada
+      } else {
         // Token (UFRN ou outro) ainda válido, não faz nada
-        logger.info(`Token [${processedToken.provider}] ainda válido.`);
+        logger.info(
+          `Token [${processedToken.provider}] e SISMAN ainda válido.`
+        );
       }
 
       logger.debug(`
