@@ -20,6 +20,7 @@ export interface AuthorizationApiResponse {
   error?: string;
   expires_in?: number;
   refresh_token?: string;
+  id: string;
 }
 
 // Função auxiliar para criar o token JWT temporário para a API de autorização
@@ -131,6 +132,7 @@ export async function handleAuthorizationLogic(
 
       if (authorizationData) {
         fieldsToAdd.accessTokenSisman = authorizationData.access_token;
+        fieldsToAdd.idSisman = authorizationData.id;
         fieldsToAdd.roles = authorizationData.roles;
         fieldsToAdd.expiresAtSisman = Math.floor(
           Date.now() / 1000 + (authorizationData.expires_in || 3600)

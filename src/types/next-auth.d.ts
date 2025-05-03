@@ -9,6 +9,7 @@ declare module 'next-auth' {
   interface Session {
     user: {
       idUfrn: string; // Ou o tipo correto do seu ID (number, etc.)
+      idSisman?: string;
       login?: string | null;
     } & DefaultSession['user']; // Mantém os campos padrão como name, email, image
     provider?: string;

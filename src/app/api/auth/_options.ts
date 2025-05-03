@@ -153,6 +153,7 @@ Token: ${JSON.stringify(token, null, 2)}
       session.refreshTokenUfrn = token.refreshTokenUfrn as string | null;
 
       // Expõe dados da API de autorização - SISMAN
+      session.user.idSisman = token.idSisman as string | undefined;
       session.accessTokenSisman = token.accessTokenSisman as string | null;
       session.roles = token.roles as string[] | undefined;
       session.authorizationError = token.authorizationError as
