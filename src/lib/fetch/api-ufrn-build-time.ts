@@ -22,7 +22,7 @@ interface TokenResponse {
  * @throws Throws an error if authentication fails.
  */
 async function authenticate(
-  cache: RequestCache = 'default'
+  cache: RequestCache = 'force-cache'
 ): Promise<TokenResponse> {
   // Ensure environment variables are defined or provide defaults
   const clientId = process.env.UFRN_CLIENT_ID;
